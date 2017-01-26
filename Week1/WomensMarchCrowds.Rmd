@@ -1,0 +1,80 @@
+---
+title: "Women's March 2017 US Crowds"
+author: "Luke Wolcott"
+date: "January 24, 2017"
+output: html_document
+---
+      
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+On Saturday January 21, 2017, the day after Trump's inauguration, thousands of people protested around the US (and around the world).  This report asks the question **"Where were the crowds largest?"** Restricting to US data, first we look at absolute numbers, and then at protest crowd numbers relative to city population.
+
+### Crowd number data
+
+We rely on data gathered by Jeremy Pressman and Erica Chenoweth, taken from this site on 1/24/2017:
+
+`https://docs.google.com/spreadsheets/d/1xa0iLqYKz8x9Yc_rfhtmSOJQ2EGgeUVjvV4A8LsIaxY/htmlview?sle=true#`
+
+This spreadsheet was saved and cleaned up in Excel, where we also removed non-US data.  The resulting file is `USCrowdNumbers.csv`.
+
+```{r}
+data <- read.csv("USCrowdNumbers.csv", stringsAsFactors = FALSE, na.strings="0")
+names(data) <- c("City", "State", "Estimate1", "Estimate2")
+data$Estimate1 <- sub(',','', data$Estimate1)
+data$Estimate2 <- sub(',','', data$Estimate2)
+data$Estimate1 <- as.numeric(data$Estimate1)
+data$Estimate2 <- as.numeric(data$Estimate2)
+data <- data[!is.na(data$Estimate1),]
+# create column for average of low and high crowd estimates
+data$CrowdAverage <- (data$Estimate1 + data$Estimate2)/2
+```
+
+We'll use the average of the lower and upper crowd size estimates from this data set.  The distribution of the log10 values are nice.
+
+```{r}
+hist(log10(data$CrowdAverage))
+```
+
+Here is the list of the top 25 largest protests, sorted by size.
+
+```{r}
+library(dplyr)
+top_25 <- data[data$CrowdAverage >= 20000,]
+arrange(top_25, -CrowdAverage)
+```
+
+
+### Crowd numbers relative to city population
+
+This is interesting but probably closely related to the population of the city in which the protest took place.  Now we will compare the relative size of these protests normalized to the city population.  For this we collect data on city population and latitude/longitude from this Wikipedia page:
+
+`https://en.wikipedia.org/wiki/List_of_United_States_cities_by_population`
+
+This data is in the file `CityPops.csv`.  First we sort the 25 cities in order of CrowdRatio -- the ratio of number of protesters to city population.
+
+```{r}
+pops <- read.csv("CityPops.csv", stringsAsFactors = FALSE)
+d <- merge(top_25, pops)
+d$CrowdRatio <- d$CrowdAverage/d$Population
+e <- d[,c(1,5,6,9)]
+arrange(e,-CrowdRatio)
+```
+
+### Map of crowd-to-population ratios:
+
+This map gives a visualization of these ratios.
+
+```{r}
+library(leaflet)
+d %>%
+      leaflet() %>%
+      addTiles() %>%
+      addCircles(weight=1, radius=sqrt(d$CrowdRatio)*10^6)
+```
+
+
+
+
+
