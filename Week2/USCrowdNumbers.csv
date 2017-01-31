@@ -1,0 +1,640 @@
+City,State/Territory,Estimate1 (low),Estimate2 (high)
+"Abilene, TX",TX,200,200
+"Accident, MD",MD,54,54
+"Adak, AK",AK,10,10
+"Adrian, MI",MI,150,150
+"Ajo, AZ",AZ,250,250
+"Alameda, CA",CA,8,8
+"Alamosa, CO",CO,350,350
+"Albany, CA",CA,500,500
+"Albany, NY",NY,"7,000","9,000"
+"Alexandria, VA",VA,17,17
+"Albuquerque, NM",NM,"3,000","15,000"
+"Alliance, NE",NE,100,150
+"Almanor West, CA",CA,4,4
+"Alpine, TX",TX,96,96
+"Altoona, PA",PA,,
+"Amarillo, TX",TX,600,700
+"Amelia Island, FL",FL,700,"1,367"
+"Anacortes, WA",WA,"1,200","1,200"
+"Anchorage, AK",AK,"2,000","3,500"
+"Angola, IN",IN,24,60
+"Ann Arbor, MI",MI,"11,000","11,000"
+"Annapolis, MD",MD,"1,600","1,600"
+"Annville, PA",PA,30,30
+"Appleton, WI",WI,3,3
+"Arden, DE",DE,40,50
+"Arlington, VA",VA,,
+"Asbury Park, NJ",NJ,"6,000","6,000"
+"Asheville, NC",NC,"7,000","10,000"
+"Ashland, OR",OR,"15,000",15000
+"Aspen, CO",CO,200,1000
+"Astoria, OR",OR,"1,300",1600
+"Athens, GA",GA,700,5000
+"Athens, OH",OH,300,500
+"Atlanta, GA",GA,"60,000",63000
+"Augusta, GA",GA,600,600
+"Augusta, ME",ME,"5,000",10000
+"Austin, TX",TX,"33,000","72,000"
+"Avalon, CA",CA,44,44
+"Bailey, CO",CO,5,5
+"Bainbridge Island, WA",WA,200,350
+"Bakersfield, CA",CA,88,150
+"Baltimore, MD",MD,"5,000",5000
+"Bar Harbor, ME",ME,,
+"Bandon, OR",OR,70,70
+"Bayfield, WI",WI,427,427
+Beaufort,NC,11,11
+"Beaumont, TX",TX,300,300
+"Beaver, PA",PA,275,300
+"Beaver Island, MI",MI,18,22
+"Bellingham, WA",WA,"5,000",6000
+"Bemidji, MN",MN,250,500
+"Bend, OR",OR,"3,000","5,000"
+"Bentonville, AR",AR,300,600
+"Berkeley, CA",CA,200,"1,000"
+"Bethel, AK",AK,40,100
+"Bethlehem, CT",CT,2,2
+"Bethlehem, PA",PA,500,540
+"Bettendorf, IA",IA,300,800
+"Beverly Hills, CA",CA,250,300
+"Binghamton, NY",NY,"2,000","3,000"
+"Birmingham, AL",AL,"5,000",10000
+"Bishop, CA",CA,600,600
+"Bismarck, ND",ND,500,500
+"Black Mountain, NC",NC,250,400
+"Block Island, RI",RI,60,80
+"Bloomsburg, PA",PA,40,60
+"Bluff, UT",UT,48,48
+"Boise, ID",ID,"5,000",5000
+"Borrego Springs, CA",CA,140,150
+"Boston, MA",MA,"175,000","175,000"
+"Bozeman, MT",MT,13,13
+"Breen, CO",CO,1,1
+"Bridgewater, MA",MA,12,12
+"Brighton, MI",MI,300,300
+"Brattleboro, VT",VT,250,250
+"Brookings, OR",OR,250,300
+"Broomfield, CO",CO,100,200
+"Brownsville, TX",TX,300,390
+"Brunswick, ME",ME,300,400
+"Buffalo, NY",NY,"2,500","3,000"
+"Burbank, CA",CA,300,300
+"Burns, OR",OR,20,20
+"Burnsville, NC",NC,80,80
+Cambridge,MN,22,22
+"Canton, NY",NY,135,300
+"Cape Henlopen, DE",DE,250,250
+"Carbondale, CO",CO,200,700
+"Carbondale, IL",IL,"1,000","1,785"
+"Carmel, CA",CA,15,25
+"Casper, WY",WY,700,"1,000"
+"Cathlamet, WA",WA,2,2
+"Cedaredge, CO",CO,,
+"Champaign, IL",IL,"5,000","5,800"
+"Charleston, SC",SC,"2,000","2,000"
+"Charleston, WV",WV,"2,000","3,000"
+"Charlotte, NC",NC,"20,000","30,000"
+"Charlottesville, VA",VA,"2,000","2,500"
+"Chattanooga, TN",TN,"1,000","3,000"
+"Chelan, WA",WA,400,470
+"Chesapeake Bay, MD",MD,1,1
+"Cheyenne, WY",WY,"1,200","2,000"
+"Chicago, IL",IL,"250,000","250,000"
+"Chico, CA",CA,"1,000","3,000"
+"Chillicothe, OH",OH,"1,000","1,000"
+"Christiansted, St. Croix",VI,350,550
+"Cincinnati, OH",OH,"5,000","12,000"
+"Clare, MI",MI,24,75
+"Clarion, PA",PA,65,100
+"Clemson, SC",SC,500,500
+"Cleveland, OH",OH,"15,000",15000
+"Cobb, CA",CA,2,2
+"Cobleskill, NY",NY,300,300
+"Cody, WY",WY,400,500
+"College Station, TX",TX,50,50
+"Colorado Springs, CO",CO,"7,000",7000
+"Columbia, MD",MD,100,125
+"Columbia, MO",MO,"2,000",3604
+"Columbia, SC",SC,"2,000",3000
+"Columbus, OH",OH,"2,000",2000
+"Columbus, OH",OH,200,200
+"Compton, CA",CA,35,45
+"Concord, NH",NH,"4,000",6000
+"Conover, WI",WI,1,1
+"Conway, NH",NH,,
+"Cooperstown, NY",NY,200,200
+"Coos Bay, OR",OR,200,200
+"Copper Harbor, MI",MI,19,36
+"Cordova, AK",AK,108,114
+"Corpus Christi, TX",TX,24,24
+"Cortez, CO",CO,400,504
+"Corvallis, OR",OR,100,100
+"Craftsbury, VT",VT,15,15
+"Crested Butte, CO",CO,350,500
+"Crestone, CO",CO,1,1
+"Cruz Bay, St. John",VI,200,200
+"Crystal River, FL",FL,7,7
+"Dallas, TX",TX,"5,000",8000
+"Davis, WV",WV,12,12
+"Dayton, OH",OH,"3,000",3000
+"Daytona Beach, FL",FL,100,100
+"Decorah, IA",IA,800,1000
+"Delaware, OH",OH,127,130
+"Delhi, NY",NY,50,120
+"Deming, NM",NM,45,50
+"Denton, TX",TX,"2,500",2800
+"Denver, CO",CO,"100,000",200000
+"Des Moines, IA",IA,"26,000","26,000"
+"Detroit, MI",MI,4000,4000
+Disability (online),,,
+"Douglas-Saugatuck, MI",MI,"1,200","2,500"
+"Doylestown, PA",PA,"1,000","2,000"
+"Driggs, ID",ID,"1,000","1,000"
+"Dubuque, IA",IA,400,400
+"Duluth, MN",MN,"1,500","1,700"
+"Durango, CO",CO,200,"1,000"
+"Eagle Pass, TX",TX,30,30
+"East Haddam, CT",CT,500,500
+"East Liberty, PA",PA,2000,2000
+"East Millinocket, ME",ME,4,4
+"Eastport, ME",ME,111,111
+"Eastsound, WA",WA,250,250
+"Eau Claire, WI",WI,250,250
+"Eau Gallie, FL",FL,,
+"El Centro, CA",CA,100,100
+"El Morro, NM",NM,30,30
+"El Paso, TX",TX,"1,000","2,000"
+"Elgin, IL",IL,200,"1,000"
+"Elkton, OR",OR,,
+"Elizabethtown, NY",NY,,
+"Ellensburg, WA",WA,200,275
+"Ellsworth, ME",ME,60,60
+"Ely, MN",MN,50,50
+"Encinitas, CA (Seacrest)",CA,50,50
+"Enterprise, OR",OR,,
+"Ephrata, WA",WA,250,250
+"Erie, PA",PA,"2,500","4,000"
+"Eugene, OR",OR,"7,000","10,000"
+"Eureka, CA",CA,"5,000","8,000"
+"Evanston, WY",WY,1,1
+"Fairbanks, AK",AK,"2,000","2,000"
+"Fairfax, CA",CA,25,60
+"Fairfield, IA",IA,200,200
+"Fairmont, WV",WV,95,95
+"Falmouth, MA",MA,"1,000","1,000"
+"Fargo, ND",ND,"1,000","3,000"
+"Fayetteville, AR",AR,"1,000","1,000"
+"Fernandina Beach, FL",FL,1000,1300
+"Flagstaff, AZ",AZ,1000,2000
+"Florence, OR",OR,300,300
+"Floyd, VA",VA,200,200
+"Forks, WA",WA,45,45
+"Fort Atkinson, WI",WI,200,200
+"Fort Bragg, CA",CA,2500,2800
+"Fort Collins, CO",CO,600,600
+"Fort Sumner, NM",NM,,
+"Fort Wayne, IN",IN,1000,1000
+"Fort Worth, TX",TX,5000,6000
+"Francestown, NH",NH,134,134
+"Frederick, MD",MD,"1,000","1,000"
+"Fredonia, NY",NY,70,120
+"Fresno, CA",CA,"2,000","2,000"
+"Friday Harbor, WA",WA,"1,500","1,500"
+"Gainesville, FL",FL,"1,500","1,500"
+"Gainesville, FL",FL,500,500
+"Galesburg, IL",IL,200,500
+"Gila, NM",NM,1,1
+"Glens Falls, NY",NY,"1,000","1,500"
+"Glenwood Springs, CO",CO,100,100
+"Gloucester, NJ",NJ,,
+"Gold Canyon, AZ",AZ,,
+"Gouldsboro, ME",ME,25,45
+"Grand Forks, ND",ND,304,304
+"Grand Junction, CO",CO,"4,500","5,000"
+"Grand Marais, MN",MN,97,120
+"Grand Rapids, MI",MI,"2,500",3000
+"Grants Pass, OR",OR,1,1
+"Green Bay, WI",WI,200,200
+"Green Valley, AZ",AZ,350,575
+"Greenfield, MA",MA,"1,000","2,000"
+"Greensboro, NC",NC,"3,000","6,000"
+"Greensburg, IN",IN,45,65
+"Greenville, SC",SC,"2,000","2,000"
+"Greenville, NC",NC,100,200
+"Greenwood, IN",IN,,
+"Gross Pointe, MI",MI,"1,143",1300
+"Gualala, CA",CA,203,300
+"Guilford, CT",CT,32,32
+"Gulfport, MS",MS,300,709
+"Gustavus, AK",AK,105,105
+"Hagatna, Guam",GM,150,250
+"Haines, AK",AK,150,170
+"Halfway, OR",OR,31,31
+"Harrisburg, PA",PA,900,"1,109"
+"Harrisville, MI",MI,5,5
+"Hartford, CT",CT,"10,000","10,000"
+"Hattiesburg, MS",MS,,
+"Helena, AR",AR,2,2
+"Helena, MT",MT,"10,000","10,000"
+"Hemet, CA",CA,98,98
+"Hilldale, UT",UT,1,1
+"Hillsborough, NC",NC,200,2000
+"Hilo, HI",HI,"1,500",2200
+"Holden Village, WA",WA,47,52
+"Homer, AK",AK,900,900
+Honolulu (Oahu) HI,HI,"3,000","8,000"
+"Hood River, OR",OR,50,50
+Hospital Ward,CA,5,5
+"Houghton, MI",MI,500,500
+"Houlton, ME",ME,45,50
+"Houston, TX",TX,"20,000","22,000"
+"Hudson, NY",NY,"2,000","3,000"
+"Huntsville, AL",AL,80,110
+"Huron, SD",SD,11,13
+"Idaho Falls, ID",ID,500,500
+"Indiana, PA",PA,100,200
+"Indianapolis, IN",IN,"4,000","10,000"
+"Inverness, CA",CA,5,5
+"Iowa City, IA",IA,"1,000","1,000"
+"Isla Vista, CA",CA,500,500
+"Issaquah, WA",WA,56,56
+"Ithaca, NY",NY,"8,000","10,000"
+"Jackson, NH",NH,300,300
+"Jackson, MS",MS,750,5000
+"Jackson Hole, WY",WY,"1,000","1,000"
+"Jacksonville, FL",FL,"2,000","3,000"
+"Jefferson City, MO",MO,6,7
+"Jerome, AZ",AZ,85,100
+"Jonesborough, TN",TN,1000,1000
+"Joseph, OR",OR,310,310
+"June Lake, CA",CA,21,21
+"Juneau, AK",AK,1000,1000
+"Kahului, HI",HI,"5,000","5,000"
+"Kalamazoo, MI",MI,"1,000","1,500"
+"Kanab, UT",UT,175,175
+"Kansas City, MO",MO,"5,000","10,000"
+"Kauai, HI",HI,,
+Kaunakakai (Molokai),HI,200,200
+"Kawaihae, HI",HI,50,50
+"Keene, NH",NH,245,600
+"Kennebunk, ME",ME,"1,000","1,000"
+"Kent, CT",CT,180,200
+"Kent, OH",OH,100,100
+"Ketchikan, AK",AK,150,200
+"Ketchum, ID",ID,"1,000","1,150"
+"Key West, FL",FL,"3,000","3,500"
+"Killington, VT",VT,51,112
+"King's Beach, CA",CA,500,800
+"Kingston, WA",WA,60,60
+"Klamath Falls, Oregon",OR,200,300
+"Knoxville, TN",TN,"2,000","5,000"
+"Kodiak, AK",AK,335,400
+"Kona, HI",HI,"3,000","3,500"
+"Kotzebue, AK",AK,35,36
+"La Crosse, WI",WI,76,150
+"La Grande, OR",OR,104,250
+"Lafayette, CO",CO,66,112
+"Lafayette, IN",IN,800,"1,000"
+"Laguna Beach, CA",CA,"3,500","4,000"
+"Lake Havasu City, AZ",AZ,35,40
+"Lakeside, OH",OH,300,300
+"Lakeville, CT",CT,85,100
+"Lamoni, IA",IA,18,30
+"Lancaster, NH",NH,400,400
+"Lancaster, PA",PA,100,"2,000"
+"Lander, WY",WY,350,500
+"Langley, WA",WA,"1,200","1,300"
+"Lansdale, PA",PA,3,3
+"Lansing, MI",MI,"8,000","30,000"
+"Laramie, WY",WY,,
+"Las Cruces, NM",NM,200,"1,500"
+"Las Vegas, NV",NV,4000,"15,000"
+"Las Vegas, NM",NM,50,50
+"Leonia, NJ",NJ,100,280
+"Lexington, KY",KY,5000,10000
+"Lewes, DE",DE,250,250
+"Lewis, NY",NY,147,325
+"Lewisburg, PA",PA,150,200
+Lihue (Kauai) HI,HI,"1,500","1,500"
+"Lilly, PA",PA,4,4
+"Lincoln, NE",NE,"2,000","4,000"
+"Little Rock, AR",AR,"7,000","7,000"
+"Logan, UT",UT,50,100
+"Lompoc, CA",CA,100,100
+"Longview, WA",WA,200,200
+"Longville, MN",MN,67,67
+"Los Angeles, CA",CA,"200,000","750,000"
+"Louisville, KY",KY,"5,000","5,000"
+"Loup City, NE",NE,100,150
+"Lovell, ME",ME,2,2
+Lovettsville,VA,5,5
+"Lubbock, TX",TX,350,"1,000"
+"Lubec, ME",ME,95,95
+"Lyons, CO",CO,25,30
+"Mt. Shasta, CA",CA,400,400
+"Mt. Laurel, NJ",NJ,20,20
+"Madison, WI",WI,"75,000","100,000"
+"Manchester, VT",VT,50,50
+"Mankato, MN",MN,50,140
+"Marfa, TX",TX,76,76
+"Marina, CA",CA,,
+"Martha's Vineyard, MA",MA,100,100
+"Marquette, MI",MI,200,800
+"Marshall, MN",MN,2,2
+"Maryville, IL",IL,40,50
+"Kahului, Maui, HI",HI,"1,500",2000
+"Mayaguez, PR",PR,,
+"McCall, ID",ID,75,150
+"McMinnville, OR",OR,700,"1,400"
+"Melbourne/Brevard County, FL",FL,500,500
+"Memphis, TN",TN,"3,000","9,000"
+"Menomonie, WI",WI,200,450
+"Mentone, AL",AL,50,50
+"Merrill, MI",MI,,
+"Miami, FL",FL,"10,000","25,000"
+"Miami Beach, FL",FL,,
+"Midland, MI",MI,400,400
+"Midland, TX",TX,50,100
+Midway Atoll,--,6,6
+"Miles City, MT",MT,500,500
+"Milford, CT",CT,120,120
+"Milhelm, PA",PA,50,50
+"Milwaukee, WI",WI,"1,000","1,000"
+"Minneapolis, MN",MN,,
+"Minocqua, WI",WI,300,300
+"Minturn, CO",CO,6,6
+"Missoula, MT",MT,80,120
+"Mitchell, IN",IN,18,20
+"Moab, UT",UT,200,200
+"Mobile, AL",AL,900,"1,000"
+"Modesto, CA",CA,900,"1,000"
+"Mooresville, NC",NC,70,70
+Monhegan Island,ME,22,22
+"Monterey Bay, CA",CA,,
+"Montpelier, VT",VT,"15,000","20,000"
+"Mora, NM",NM,1,1
+"Morganton, NC",NC,500,600
+"Morris, MN",MN,250,250
+"Moscow, ID",ID,"2,500","2,500"
+"Mount Vernon, OH",OH,20,30
+"Mount Vernon, WA",WA,200,1800
+"Murfreesboro, TN",TN,,
+"Murray, KY",KY,700,700
+"Nacogdoches, TX",TX,200,300
+"Nantucket, MA",MA,400,400
+"Napa, CA",CA,"3,000","3,000"
+"Naples, FL",FL,"2,500","5,000"
+"Nashville, TN",TN,"15,000","20,000"
+"Nebraska City, NE",NE,3,3
+"Nederland, CO",CO,20,35
+"Nevada City, CA",CA,100,100
+"New Bern, NC",NC,300,700
+"New Haven, CT",CT,200,200
+"New Orleans, LA",LA,"7,000","15,000"
+"New Smyrna Beach, FL",FL,"1,000","1,000"
+"New York, NY",NY,"400,000","500,000"
+"Newark, DE",DE,"1,000","1,200"
+"Newark, NJ",NJ,"1,000","1,000"
+"Newport, OR",OR,"1,500","1,500"
+"Nome, AK",AK,80,100
+"Norfolk, VA",VA,"2,000","2,800"
+"Northampton, MA",MA,"2,500","3,000"
+"Oak Ridge, TN",TN,450,550
+"Oakhurst, CA",CA,200,201
+"Oakland, CA",CA,"100,000","100,000"
+"Ocala, FL",FL,100,300
+"Ocean City, MD",MD,200,600
+"Ocean Shores, WA",WA,120,200
+"Ocracoke, NC",NC,108,120
+"Ogden, UT",UT,200,300
+"Oklahoma City, OK",OK,"7,000","12,000"
+"Old Saybrook, CT",CT,800,"1,000"
+"Olympia, WA",WA,"10,000","10,000"
+"Omaha, NE",NE,"12,000","18,000"
+"Oneonta, NY",NY,500,500
+"Onley, VA",VA,50,50
+"Ontario, CA",CA,200,200
+"Orange County, CA",CA,,
+"Orcas Island, WA",WA,200,200
+"Orford, NH",NH,7,7
+"Orlando, FL",FL,"3,000","8,000"
+"Owensboro, KY",KY,15,30
+"Oxford, MS",MS,450,450
+"Pacifica, CA",CA,"1,200","1,200"
+"Palm Desert, CA",CA,"1,000","1,000"
+"Palm Springs, CA",CA,,
+"Palmdale, CA",CA,24,24
+"Palmer, AK",AK,377,"1,000"
+"Paradox, NY",NY,3,3
+"Park City, UT",UT,"5,000","8,000"
+"Panama City, FL",FL,500,500
+"Paoli, IN",IN,67,67
+"Paonia, CO",CO,40,40
+"Pasadena, CA",CA,500,"1,700"
+"Pence, WI",WI,1,1
+"Pendelton, OR",OR,425,650
+"Pensacola, FL",FL,"2,000","2,000"
+"Pentwater, MI",MI,2,2
+"Peoria, IL",IL,"1,500","2,000"
+"Pequannock Township / Pompton Plains, NJ",NJ,800,"1,000"
+"Peterborough, NH",NH,50,60
+"Petersburg, AK",AK,50,80
+"Philadelphia, PA",PA,"50,000","50,000"
+"Phoenix, AZ",AZ,"20,000","25,000"
+"Pierre, SD",SD,130,135
+"Pikeville, KY",KY,100,100
+"Pinedale, WY",WY,100,100
+"Pittsburgh, PA",PA,"25,000","25,000"
+"Pittsfield, MA",MA,"1,500",1500
+"Plattsburgh, NY",NY,182,700
+"Plymouth, WI",WI,200,200
+"Pocatello, ID",ID,"1,200","1,200"
+"Point Reyes Station, CA",CA,35,85
+"Port Angeles, WA",WA,100,200
+"Port Jefferson, NY",NY,"2,000","2,000"
+"Port Jervis, NY",NY,350,500
+"Port Orford, OR",OR,280,300
+"Port Townsend, WA",WA,300,"1,000"
+"Portales, NM",NM,50,50
+"Portland, ME",ME,"10,000","10,000"
+"Portland, OR",OR,"70,000","100,000"
+"Portsmouth, NH",NH,"3,000",5000
+"Potsdam, NY",NY,18,22
+"Poughkeepsie, NY",NY,"4,000",7716
+"Prescott, AZ",AZ,"1,200","1,200"
+"Providence, RI",RI,"5,000","7,000"
+"Provincetown, MA",MA,300,300
+"Quincy, CA",CA,50,105
+"Raleigh, NC",NC,"17,000","20,000"
+"Rapid City, SD",SD,1000,"2,000"
+"Reading, PA",PA,100,450
+"Red Bank, NJ",NJ,200,400
+"Redding, CA",CA,300,300
+"Redondo Beach, CA",CA,"2,000","2,000"
+"Redwood City, CA",CA,"2,500","2,500"
+"Reno, NV",NV,"10,000","10,000"
+"Richland, WA",WA,1000,2500
+"Richmond, VA",VA,2000,2000
+"Ridgecrest, CA",CA,180,200
+"Ridgway, CO",CO,50,150
+"Riegelsville, PA",PA,170,200
+"Riverside, CA",CA,4000,4000
+"Roanoke, VA",VA,3000,4500
+"Rochester, MN",MN,600,1000
+"Rochester, NY",NY,1500,2000
+"Rock Springs, WY",WY,90,120
+"Rockford, IL",IL,"1,000","1,000"
+"Romney, WV",WV,30,50
+"Roswell, NM",NM,2,2
+"St. Augustine, FL",FL,"1,000","2,000"
+"St. Croix, VI",VI,250,250
+"St. George, UT",UT,"1,200","1,475"
+"St. John, VA",VA,,
+"St. John, VI",VI,60,60
+"St. Johnsbury, VT",VT,50,70
+"St. Louis, MO",MO,"13,000","20,000"
+"St. Mary's City, MD",MD,10,10
+"St. Mary of the Woods, IN",IN,180,200
+"St. Paul/Minneapolis, MN",MN,"90,000","100,000"
+"St. Petersburg, FL",FL,"20,000","20,000"
+"St. Thomas, VI",VI,,
+"Sacramento, CA",CA,"20,000","30,000"
+"Sag Harbor, NY",NY,250,250
+"Salem, OR",OR,"1,000","4,200"
+"Salem, WI",WI,2,2
+"Salida, CO",CO,40,50
+"Salinas, CA",CA,80,80
+"Salisbury, CT",CT,200,434
+"Salt Lake City, UT (1/20)",UT,"1,000",1000
+"Salt Lake City, UT (1/23)",UT,"6,000","10,000"
+"San Anselmo, CA",CA,4,4
+"San Antonio, TX",TX,"1,500","3,000"
+"San Bernardino, CA",CA,80,80
+"San Clemente, CA",CA,100,200
+"San Diego, CA",CA,"30,000","40,000"
+"San Francisco, CA",CA,"100,000","150,000"
+"San Jose, CA",CA,"25,000","40,000"
+"San Juan, PR",PR,200,400
+"San Juan Island, WA",WA,,
+"San Leandro, CA",CA,,
+"San Luis Obispo, CA",CA,"7,000","10,000"
+"San Marcos, CA",CA,"3,000","10,000"
+"San Rafael, CA",CA,500,500
+"Sanford, ME",ME,100,130
+"Sandpoint, ID",ID,800,1000
+"Sandy, OR",OR,,
+"Santa Ana, CA",CA,"20,000","25,000"
+"Santa Barbara, CA",CA,"5,000","8,000"
+"Santa Cruz, CA",CA,"8,000","15,000"
+"Santa Fe, NM",NM,"10,000","17,000"
+"Santa Rosa, CA",CA,"5,000","5,000"
+"Santurce, PR",PR,,
+"Sarasota, FL",FL,"7,500","10,000"
+"Sault Ste Marie, MI",MI,40,40
+"Sausalito, CA",CA,3,3
+"Savannah, GA",GA,"1,000","1,000"
+"Saxaphaw, NC",NC,80,80
+"Seaside, CA",CA,"1,500","2,000"
+"Seattle, WA",WA,"100,000","175,000"
+"Sedona, AZ",AZ,"1,000","1,000"
+"Seldovia, AK",AK,41,41
+"Selinsgrove, PA",PA,119,119
+"Seneca Falls, NY",NY,"10,000","10,000"
+"Sequim, WA",WA,300,500
+"Seward, AK",AK,54,70
+"Sharon, PA",PA,700,700
+"Sheboygan, WI",WI,300,300
+"Show Low, AZ",AZ,1,1
+"Shreveport/Bossier, LA",LA,200,1000
+"Sicklerville, NJ",NJ,250,250
+"Silver City, NM",NM,500,500
+"Silverton, CO",CO,50,50
+"Sioux Falls, SD",SD,"3,300","3,300"
+"Sitka, AK",AK,700,700
+"Skagway, AK",AK,122,122
+"Skykomish, WA",WA,8,8
+"Soldotna, AK",AK,200,322
+"Sonoma, CA",CA,"3,000",3000
+"South Bend, IN",IN,"1,000",2000
+"South Lake Tahoe, CA / Stateline, NV",CA/NV,500,700
+"South Orange, NJ",NJ,"2,000","2,000"
+"Spokane, WA",WA,"4,000","8,000"
+"Springfield, MA",MA,40,40
+"Springfield, MO",MO,"2,000","2,000"
+"Springfield, IL",IL,"1,000","1,000"
+"Steamboat Springs, CO",CO,"1,000","1,000"
+"Stamford, CT",CT,"5,000","5,000"
+"Stanley, ID",ID,30,30
+"State College, PA",PA,300,500
+"Statesboro, GA",GA,200,200
+"Staunton, VA",VA,100,100
+"Surry, ME",ME,,
+"Syracuse, NY",NY,2000,"2,000"
+"Tallahassee, FL",FL,"14,000","18,000"
+"Taos, NM",NM,100,100
+"Tecumseh, MI",MI,35,35
+"Telluride, CO",CO,200,"1,000"
+"Tenants Harbor, ME",ME,50,60
+"Terre Haute, IN",IN,200,200
+"Tillamook, OR",OR,300,300
+"Toledo, OH",OH,200,200
+"Topeka, KS",KS,"3,000","4,000"
+"Traverse City, MI",MI,"3,000","3,000"
+"Trenton, NJ",NJ,"6,000","7,500"
+"Troy, OH",OH,150,200
+"Truth or Consequences, NM",NM,150,158
+"Tucson, AZ",AZ,"15,000","15,000"
+"Tulsa, OK",OK,"1,000","1,000"
+"Tuscarora, NV",NV,7,7
+"Twisp, WA",WA,800,800
+"Ukiah, CA",CA,"1,500","2,000"
+"Unalakleet, AK",AK,38,38
+Unalaska (Dutch Harbor),AK,80,86
+"Union, WA",WA,55,60
+"Utica, NY",NY,200,300
+"Utqiagvik (Barrow), AK",AK,22,22
+"Valdez, AK",AK,100,130
+"Valparaiso, IN",IN,260,500
+"Vancouver, WA",WA,200,200
+"Vashon, WA",WA,251,300
+"Ventura, CA",CA,"1,700","3,000"
+"Vermillion, SD",SD,500,500
+"Vienna, VA",VA,28,35
+"Vieques, PR",PR,150,250
+"Vinalhaven, ME",ME,76,100
+"Visalia, CA",CA,500,500
+"Walla Walla, WA",WA,"2,000","2,000"
+"Walnut Creek, CA",CA,"3,000","10,000"
+Washington DC,DC,"500,000","680,000"
+"Watertown, NY",NY,250,250
+"Watsonville, CA",CA,300,500
+"Wausau, WI",WI,200,200
+"Welches, OR",OR,,
+"Wellfleet, MA",MA,113,113
+"Wenatchee, WA",WA,"2,000","2,000"
+"West Chester, PA",PA,150,200
+"West Jefferson, NC",NC,250,300
+"West Lima, WI",WI,1,1
+"West Palm Beach, FL",FL,"5,000",7000
+"Westfield, NJ",NJ,"1,000","2,000"
+"Wichita, KS",KS,3000,3000
+"Wichita Falls, TX",TX,150,150
+"Williamsburg, VA",VA,700,1000
+"Willits, CA",CA,50,50
+"Wilmington, NC",NC,1000,3000
+"Wilton, NH",NH,100,125
+"Winchester, VA",VA,700,1200
+"Winston-Salem, NC",NC,,
+"Winters, CA",CA,200,200
+"Woodstock, NY",NY,1000,1000
+"Woodstock, VA",VA,400,400
+"Wooster, OH",OH,500,1000
+"Worcester, MA",MA,,
+"Wyckoff, NJ",NJ,300,500
+"Yakima, WA",WA,1000,1000
+"Yellow Springs, OH",OH,250,250
+"Ypsilanti, MI",MI,1200,1200
+"Yucca Valley, CA",CA,50,75
+"Yuma, AZ",AZ,10,10
+"Zebulon, GA",GA,35,35

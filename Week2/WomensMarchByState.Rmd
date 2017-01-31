@@ -1,0 +1,117 @@
+---
+title: "‘Women’s March crowds’ vs Non-Trump Votes"
+author: "Luke Wolcott"
+date: "January 30, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+On Saturday January 21, 2017, the day after Trump's inauguration, thousands of people protested around the US (and around the world).  Previously I looked at cities with the largest protest crowds, adjusted by city population.  Now I'll compare statewide protest crowd totals to the election vote tallies.
+
+Specifically, I ask the question: **What is the relationship between a state's 1/21/17 protest total and the number of people who voted against Trump?**
+
+### Crowd number data
+
+Again, I'll use data gathered by Jeremy Pressman and Erica Chenoweth, taken from this site on 1/24/2017:
+
+`https://docs.google.com/spreadsheets/d/1xa0iLqYKz8x9Yc_rfhtmSOJQ2EGgeUVjvV4A8LsIaxY/htmlview?sle=true#`
+
+I clean up this data a little, take out non-US protests, and group protests by state.  
+
+```{r}
+# spreadsheet was downloaded from above link, then cleaned up in Excel a little.  The non-US data was removed.
+
+# this code loads the data and cleans it up more
+data <- read.csv("USCrowdNumbers.csv", stringsAsFactors = FALSE, na.strings="0")
+names(data) <- c("City", "StateCode", "Estimate1", "Estimate2")
+data$Estimate1 <- sub(',','', data$Estimate1)
+data$Estimate2 <- sub(',','', data$Estimate2)
+data$Estimate1 <- as.numeric(data$Estimate1)
+data$Estimate2 <- as.numeric(data$Estimate2)
+data <- data[!is.na(data$Estimate1),]
+
+# create column for average of low and high crowd estimates
+data$CrowdAverage <- (data$Estimate1 + data$Estimate2)/2
+
+# group by StateCode, using dplyr.  
+library(dplyr)
+by_state <- group_by(data, StateCode)
+CrowdByState <- summarize(by_state, StateCrowd = sum(CrowdAverage))
+CrowdByState <- as.data.frame(CrowdByState)
+bad <- c("--", "CA/NV", "VI", "GM")
+CrowdByState <- CrowdByState[!is.element(CrowdByState[,1], bad),]
+```
+
+### Election tallies
+
+Our 2017 National Election data comes from David Wasserman and the Cook Political Report, compiled here:
+
+`https://docs.google.com/spreadsheets/d/133Eb4qQmOxNvtesw2hdVns073R68EZx4SfCnP4IGQf8/htmlview?sle=true#gid=19`
+
+I combine  the votes for "Clinton" and "Others" into "NonTrump", organized by state.  
+
+```{r}
+votes <- read.csv("NonTrumpVotesClean.csv", stringsAsFactors = FALSE)
+```
+
+### State protest crowds versus Non-Trump election votes
+
+```{r}
+data <- merge(votes, CrowdByState)
+data$Ratio <- data$StateCrowd/data$NonTrump
+#hist(data$Ratio, breaks=15)
+```
+
+Washington, DC, is an outlier because many people came from out of the city.  The ratio of protesters to population is 1.976!
+
+Here is a plot of StateCrowd versus Non-Trump Votes, on a log10 scale, which allows you to see which state is where by hovering.
+
+```{r}
+library(plotly)
+plot_ly(data, x=~log10(NonTrump), y=~log10(StateCrowd), mode="markers", text = ~StateCode)
+```
+
+We are interested in fitting a line to the data.
+
+```{r}
+x <- log10(data$NonTrump)
+y <- log10(data$StateCrowd)
+fit <- lm(y ~ x)
+plot(x,y, pch=20, xlab = "Non-Trump votes (log scale)", ylab = "Protest crowd (log scale)", main = "State protest size vs Non-Trump votes")
+abline(fit, lwd=2, col="blue")
+```
+
+The fitted slope is 0.9375, which means that if State B has ten times as many non-Trump voters as State A, we would expect the crowd to be 10^(0.9375) = 8.66 times larger.
+
+A non-log plot also shows the correlation.
+```{r}
+xx <- data$NonTrump
+yy <- data$StateCrowd
+fitt <- lm(yy ~ xx)
+plot(xx,yy, pch=20, xlab="Non-Trump votes", ylab="Protest crowd", main="State protest size vs Non-Trump votes")
+abline(fitt, lwd=2, col="blue")
+```
+
+The slope for this fitted line is 0.06997, which we can interpret as saying that on average 7.00% of non-Trump voters attended the 1/21/2017 protest.  (Except that the crowd estimates include non-voters, for example children.)
+
+If we remove DC, we can more reasonably compare the 50 states.  Here is a heatmap showing each state's ratio of protest crowd to non-Trump votes.  
+
+
+```{r}
+data_noDC <- data[-8,]
+names(data_noDC)[1] = "State"
+data_noDC$hover <- with(data_noDC, paste(State))#, '<br>',"Ratio:",Ratio))
+borders <- list(color = toRGB("red"))
+map_options <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+plot_ly(data_noDC, z = ~Ratio, text = ~hover, locations = ~State, type = 'choropleth', locationmode = 'USA-states', color = ~Ratio, colors = 'Blues', marker = list(line = borders)) %>% layout(title = 'Ratio of protest crowd to non-Trump votes', geo = map_options)
+```
+
