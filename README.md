@@ -2,13 +2,13 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
-## Week 1
+## Week 3
 
-Looks at relative sizes of US Women's March protests on Jan 21, 2017.
+Calculates the percentage of H1-B visa applications affected by the proposed law HR-670, which would raise the wage exemption level for "H1-B Dependent" employers from $60,000 to $130,000.
 
-See folder for data files and R markdown report, or read at:
+See folder for data files and R markdown report with all code used, or read at:
 
-https://lukewolcott.github.io/InTheResistance/Week1/WomensMarchCrowds.html
+https://lukewolcott.github.io/InTheResistance/Week3/H1BVisaCutoffIncrease.html
 
 ## Week 2
 
@@ -17,3 +17,11 @@ Compares the size of 1/21/2017 protests to the number of non-Trump voters, in ea
 See folder for data files and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week2/WomensMarchByState.html
+
+## Week 1
+
+Looks at relative sizes of US Women's March protests on Jan 21, 2017.
+
+See folder for data files and R markdown report, or read at:
+
+https://lukewolcott.github.io/InTheResistance/Week1/WomensMarchCrowds.html
