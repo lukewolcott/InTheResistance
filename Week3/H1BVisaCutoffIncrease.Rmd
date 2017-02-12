@@ -1,0 +1,120 @@
+---
+title: "H1-B Visa Wages and $130,000 cutoff"
+author: "Luke Wolcott"
+date: "February 10, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+In late January, Rep. Zoe Lofgren (D-Calif.) introduced H.R.670, the "High-Skilled Integrity and Fairness Act of 2017", which proposed changes to the H1-B Visa program.  One current policy is that if an H1-B worker earns over $60,000 (or has a relevant Masters degree), the US employer is exempt from certain obligations related to non-displacement.  The idea is that these workers are highly skilled and desirable, so we should make it easier to bring them into the country.  The proposed bill would raise this exemption level to $130,000, and remove the Masters degree option.
+
+Text of HR-670 is here:
+`https://www.congress.gov/bill/115th-congress/house-bill/670/text`
+
+One thing to note is that the new law raises the exemption level for "H1-B Dependent" employers only.  These are employers that satisfy one of the following:
+
+-- have <26 employees and at least 8 of them are H1-B workers.
+
+-- have 26-50 employees and at least 13 of them are H1-B workers.
+
+-- have >50 employees and at least 15% of them are H1-B workers.
+
+The question I ask here is: **What percentage of H1-B applications will be affected by this increased wage exemption level?**
+
+### Data source
+
+I use the FY 2016 data on H1-B applications, from the Department of Labor, accessed 2/10/2017:
+
+`https://www.foreignlaborcert.doleta.gov/performancedata.cfm`
+
+All data cleaning and manipulation code can be found in the .rmd file accompanying this report.
+
+```{r, cache=TRUE}
+# The file "H-1B_Disclosure_Data_FY16.xlsx" was downloaded
+# from the above website, and converted into a .csv file.
+# This file is available zipped on the github repo.
+
+raw <- read.csv("H-1B_Disclosure_Data_FY16.csv", header=TRUE)
+```
+
+```{r, cache=TRUE}
+# select for interesting columns
+data <- raw[,c(1,2,3,4,6,7,8,10,11,12,22,24,26,27,31,32,33, 34,38,39)]
+# take out two applications with errors in wage data
+data <- data[data$CASE_NUMBER != "I-200-16067-157449",]
+data <- data[data$CASE_NUMBER != "I-203-16162-488863",]
+# only want certified applications
+data <- data[data$CASE_STATUS=="CERTIFIED",]
+data$WAGE_RATE_OF_PAY_FROM <- as.numeric(gsub(',','',as.character(data$WAGE_RATE_OF_PAY_FROM)))
+data$WAGE_RATE_OF_PAY_TO <- as.numeric(gsub(',','',as.character(data$WAGE_RATE_OF_PAY_TO)))
+data$PREVAILING_WAGE <- as.numeric(gsub(',','',as.character(data$PREVAILING_WAGE)))
+data$TOTAL_WORKERS <- as.numeric(data$TOTAL_WORKERS)
+```
+
+```{r, cache=TRUE}
+# create a column PW_ANNUALIZED for annualized prevailing wage
+data$PW_ANNUALIZED <- rep(0,nrow(data))
+a <- data[data$PW_UNIT_OF_PAY == "Year",]
+b <- data[data$PW_UNIT_OF_PAY == "Week",]
+c <- data[data$PW_UNIT_OF_PAY == "Month",]
+d <- data[data$PW_UNIT_OF_PAY == "Hour",]
+e <- data[data$PW_UNIT_OF_PAY == "Bi-Weekly",]
+a$PW_ANNUALIZED = a$PREVAILING_WAGE
+b$PW_ANNUALIZED = b$PREVAILING_WAGE*50
+c$PW_ANNUALIZED = c$PREVAILING_WAGE*12
+d$PW_ANNUALIZED = d$PREVAILING_WAGE*2000
+e$PW_ANNUALIZED = e$PREVAILING_WAGE*26
+data <- rbind(a,b,c,d,e)
+
+# create a column OW_ANNUALIZED for annualized offered wage
+data$OW_ANNUALIZED <- rep(0,nrow(data))
+a <- data[data$WAGE_UNIT_OF_PAY == "Year",]
+b <- data[data$WAGE_UNIT_OF_PAY == "Week",]
+c <- data[data$WAGE_UNIT_OF_PAY == "Month",]
+d <- data[data$WAGE_UNIT_OF_PAY == "Hour",]
+e <- data[data$WAGE_UNIT_OF_PAY == "Bi-Weekly",]
+a$OW_ANNUALIZED = a$WAGE_RATE_OF_PAY_FROM
+b$OW_ANNUALIZED = b$WAGE_RATE_OF_PAY_FROM*50
+c$OW_ANNUALIZED = c$WAGE_RATE_OF_PAY_FROM*12
+d$OW_ANNUALIZED = d$WAGE_RATE_OF_PAY_FROM*2000
+e$OW_ANNUALIZED = e$WAGE_RATE_OF_PAY_FROM*26
+data <- rbind(a,b,c,d,e)
+```
+
+### Wage levels and $130,000
+
+```{r}
+#table(data$H.1B_DEPENDENT)
+# shows there are 323711 non-dependent and 234746 dependent
+```
+
+Every application is from an employer that is either "H1-B Dependent" or not.  The proposed wage exemption increase only applies to Dependent employers, which make up 42% of the applications. 
+
+```{r}
+data_dep <- data[data$H.1B_DEPENDENT == "Y",]
+```
+
+The following graph shows the distribution of prevailing wages on the H1-B visa applications from "H1-B Dependent" employers filed in the fiscal year 2016.  The blue line is the proposed $130,000 cutoff, and the green line is the current $60,000 cutoff.
+
+```{r}
+hist(log10(data$PW_ANNUALIZED), col="red",xlab="Log10 of Prevailing Wage",main="H1B applicant prevailing wages, and $130,000")
+abline(v=log10(130000),col="blue",lwd=3)
+abline(v=log10(60000),col="green",lwd=3)
+```
+
+```{r}
+# percentage of jobs getting cut at the $130,000 cutoff
+# x <- data$PW_ANNUALIZED
+# length(x[x>60000])/nrow(data) # gives 0.69296
+# length(x[x>130000])/nrow(data) # gives 0.03589
+```
+
+Under the current rules, 69% of the applications are exempt (not counting those that have a relevant Masters degree; this information isn't included in my data set so I can't take it into consideration).  Under the new rules, only 3.5% of the applications are exempt.
+
+Therefore at least 65.7% of the H1-B Dependent employer applications are affected, which is 27.6% of all applications.
+
+----------
