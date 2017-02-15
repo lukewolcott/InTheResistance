@@ -8,7 +8,7 @@ Compares the offered wages and prevailing wages listed on application for H1-B v
 
 See folder for data files and R markdown report with all code used, or read at:
 
-https://lukewolcott.github.io/InTheResistance/Week3/H1BVisaEmployersComparison.html
+https://lukewolcott.github.io/InTheResistance/Week4/H1BVisaEmployersComparison.html
 
 ## Week 3
 
