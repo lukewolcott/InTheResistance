@@ -1,0 +1,153 @@
+---
+title: "H1-B Visa Employer Comparison"
+author: "Luke Wolcott"
+date: "February 14, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+Part of the discussion about revamping the H1-B visa system involves the question of "H1-B Dependent" versus "H1-B Non-dependent" employers.  The suggestion is that H1-B dependent employers may be taking advantage of the wage exemption system, and the visa program more generally.
+
+This week I ask the question: **What are the differences in wages offered by H1-B dependent and non-dependent employers?**
+
+As with last week, I'll use the Department of Labor's disclosure data of FY 2016 applications for H1-B visas, accessed 2/10/2017 from here:
+
+`https://www.foreignlaborcert.doleta.gov/performancedata.cfm`
+
+All data cleaning and manipulation code can be found in the .rmd file accompanying this report.
+
+```{r, cache=TRUE}
+# The file "H-1B_Disclosure_Data_FY16.xlsx" was downloaded
+# from the above website, and converted into a .csv file.
+# This file is available zipped on the github repo.
+
+raw <- read.csv("H-1B_Disclosure_Data_FY16.csv", header=TRUE)
+```
+
+```{r, cache=TRUE}
+# select for interesting columns
+data <- raw[,c(1,2,3,4,6,7,8,10,11,12,22,24,26,27,31,32,33, 34,38,39)]
+# take out two applications with errors in wage data
+data <- data[data$CASE_NUMBER != "I-200-16067-157449",]
+data <- data[data$CASE_NUMBER != "I-203-16162-488863",]
+# only want certified applications
+data <- data[data$CASE_STATUS=="CERTIFIED",]
+data$WAGE_RATE_OF_PAY_FROM <- as.numeric(gsub(',','',as.character(data$WAGE_RATE_OF_PAY_FROM)))
+data$WAGE_RATE_OF_PAY_TO <- as.numeric(gsub(',','',as.character(data$WAGE_RATE_OF_PAY_TO)))
+data$PREVAILING_WAGE <- as.numeric(gsub(',','',as.character(data$PREVAILING_WAGE)))
+data$TOTAL_WORKERS <- as.numeric(data$TOTAL_WORKERS)
+
+# throw out data that is not marked Dependent or Non-Dependent
+data <- data[data$H.1B_DEPENDENT == "Y" | data$H.1B_DEPENDENT == "N",]
+```
+
+```{r, cache=TRUE}
+# create a column PW_ANNUALIZED for annualized prevailing wage
+data$PW_ANNUALIZED <- rep(0,nrow(data))
+a <- data[data$PW_UNIT_OF_PAY == "Year",]
+b <- data[data$PW_UNIT_OF_PAY == "Week",]
+c <- data[data$PW_UNIT_OF_PAY == "Month",]
+d <- data[data$PW_UNIT_OF_PAY == "Hour",]
+e <- data[data$PW_UNIT_OF_PAY == "Bi-Weekly",]
+a$PW_ANNUALIZED = a$PREVAILING_WAGE
+b$PW_ANNUALIZED = b$PREVAILING_WAGE*50
+c$PW_ANNUALIZED = c$PREVAILING_WAGE*12
+d$PW_ANNUALIZED = d$PREVAILING_WAGE*2000
+e$PW_ANNUALIZED = e$PREVAILING_WAGE*26
+data <- rbind(a,b,c,d,e)
+
+# create a column OW_ANNUALIZED for annualized offered wage
+data$OW_ANNUALIZED <- rep(0,nrow(data))
+a <- data[data$WAGE_UNIT_OF_PAY == "Year",]
+b <- data[data$WAGE_UNIT_OF_PAY == "Week",]
+c <- data[data$WAGE_UNIT_OF_PAY == "Month",]
+d <- data[data$WAGE_UNIT_OF_PAY == "Hour",]
+e <- data[data$WAGE_UNIT_OF_PAY == "Bi-Weekly",]
+a$OW_ANNUALIZED = a$WAGE_RATE_OF_PAY_FROM
+b$OW_ANNUALIZED = b$WAGE_RATE_OF_PAY_FROM*50
+c$OW_ANNUALIZED = c$WAGE_RATE_OF_PAY_FROM*12
+d$OW_ANNUALIZED = d$WAGE_RATE_OF_PAY_FROM*2000
+e$OW_ANNUALIZED = e$WAGE_RATE_OF_PAY_FROM*26
+data <- rbind(a,b,c,d,e)
+```
+
+```{r}
+# remove some rows with data entry errors
+#data <- subset(data, data$WAGE_RATE_OF_PAY_FROM <= 10000 | data$WAGE_UNIT_OF_PAY != "Hour")
+data <- subset(data, data$OW_ANNUALIZED < 1000000)
+```
+
+Of the 558,438 visa applications we're considering, 234,742 (or 42%) are from H1-B dependent employers.
+
+### Prevailing Wages
+
+All applicants submit data on the prevailing wages of the proposed position.  I've annualized these wages and plot the distribution for H-1B Non-Dependent employers ("N") or Dependent employers ("Y").
+
+```{r}
+library(ggplot2)
+qplot(log10(PW_ANNUALIZED), data=data, facets=H.1B_DEPENDENT~., fill=I("blue"), col=I("black"), xlim=c(4,5.8), xlab="Dollars (Log 10)", main="Prevailing Wages for Positions Applied For")
+```
+
+**It does appear that there is a tendency for H1-B non-dependent employers to submit applications for jobs with higher prevailing wages, and a wider variety of job salaries.**
+
+```{r}
+dependent_employers <- data[data$H.1B_DEPENDENT == "Y",]
+nondependent_employers <- data[data$H.1B_DEPENDENT == "N",]
+```
+
+We can verify this by looking at the descriptive statistics (`sd` is standard deviation).
+
+```{r, echo=TRUE}
+summary(nondependent_employers$PW_ANNUALIZED)
+sd(nondependent_employers$PW_ANNUALIZED)
+summary(dependent_employers$PW_ANNUALIZED)
+sd(dependent_employers$PW_ANNUALIZED)
+```
+
+### Offered Wages
+
+Likewise applications include data on the wage that will be offered to the worker.  These are required to be higher than the prevailing wages (although in 26 out of the 558,438 applications they are not).  Here is a plot comparing distributions of annualized offered wages.
+
+```{r}
+qplot(log10(OW_ANNUALIZED), data=data, facets=H.1B_DEPENDENT~., fill=I("blue"), col=I("black"), xlim=c(4,5.8), xlab="Dollars (Log 10)", main="Offered Wages for Positions Applied For")
+```
+
+We see the same pattern of higher wages and larger variety for non-dependent employers, in the descriptive statistics.
+
+```{r, echo=TRUE}
+summary(nondependent_employers$OW_ANNUALIZED)
+sd(nondependent_employers$OW_ANNUALIZED)
+summary(dependent_employers$OW_ANNUALIZED)
+sd(dependent_employers$OW_ANNUALIZED)
+```
+
+### Are non-dependent employers more generous?
+
+In comparing the difference between offered wages and prevailing wages, the data above suggest that non-dependent employers may be more generous.  I would like to test this hypothesis.
+
+The variable `OW_ABOVE_PW` measures the percentage increase/decrease between offered wage and prevailing wage (i.e. the relative difference between these two quantities).
+
+```{r}
+dependent_employers$OW_ABOVE_PW <- 100*(dependent_employers$OW_ANNUALIZED - dependent_employers$PW_ANNUALIZED)/dependent_employers$PW_ANNUALIZED
+
+nondependent_employers$OW_ABOVE_PW <- 100*(nondependent_employers$OW_ANNUALIZED - nondependent_employers$PW_ANNUALIZED)/nondependent_employers$PW_ANNUALIZED
+```
+
+```{r, echo = TRUE}
+summary(nondependent_employers$OW_ABOVE_PW)
+summary(dependent_employers$OW_ABOVE_PW)
+```
+
+To more thoroughly address this question, we use a t-test to compare these distributions.  
+
+```{r, echo=TRUE}
+t.test(nondependent_employers$OW_ABOVE_PW, dependent_employers$OW_ABOVE_PW, paired = FALSE)
+```
+
+From this we can conclude that on average dependent employers will offer a wage that is 9.9% above the prevailing wage, and non-dependent employers will offer a wage that is 16.3% above the prevailing wage.  These two percentages are not actually that close together, so we have a very small p-value and a 95% confidence interval far away from zero.
+
+----------
