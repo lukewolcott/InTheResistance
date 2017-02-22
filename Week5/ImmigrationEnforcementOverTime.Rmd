@@ -1,0 +1,58 @@
+---
+title: "Immigration Enforcement 1925-2015"
+author: "Luke Wolcott"
+date: "February 22, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+This week the Trump Administration announced new rules that would increase the number of deportations of undocumented immigrants.  To start to understand the implications of these rules, I'm first looking at historical data on US immigration enforcement actions: apprehensions, removals, and forced returns.  My initial question is: **How have the number of immigration enforcement actions changed over time, and with different US presidents?**
+
+
+I found a good summary of immigration enforcement actions by the Department of Homeland Security here:
+
+`https://www.dhs.gov/sites/default/files/publications/Enforcement_Actions_2014.pdf`
+
+The difference between a removal and a return is the following:
+
+*"Removals are the compulsory and confirmed movement of an inadmissible or deportable alien out of the United States based on an order of removal. An alien who is removed has administrative or criminal consequences placed on subsequent reentry owing to the fact of the removal."*
+
+*"Returns are the confirmed movement of an inadmissible or deportable alien out of the United States not based on an order of removal."* 				
+
+My data comes from the DHS immigration statistics.
+
+`https://www.dhs.gov/immigration-statistics/enforcement-actions`
+
+Below are plots of the counts, with vertical lines to indicate the transitions from Clinton to Bush to Obama presidencies.
+
+```{r}
+data <- read.csv("ImmigrationEnforcement.csv")
+```
+
+```{r}
+library(ggplot2)
+g <- ggplot(data, aes(Year))
+g <- g + geom_line(aes(y=Apprehended, col="Apprehended"))
+g <- g + geom_line(aes(y=Removals, col="Removals"))
+g <- g + geom_line(aes(y=Returns, col="Returns")) 
+g <- g + labs(y = "Count")
+g <- g + labs(title = "Immigration Enforcement Since 1925")
+g <- g + geom_vline(xintercept = c(1992,2000,2008))
+g
+```
+
+```{r}
+recent_data <- data[data$Year >= 1992,]
+g <- ggplot(recent_data, aes(Year))
+g <- g + geom_line(aes(y=Apprehended, col="Apprehended"))
+g <- g + geom_line(aes(y=Removals, col="Removals"))
+g <- g + geom_line(aes(y=Returns, col="Returns")) 
+g <- g + labs(y = "Count")
+g <- g + labs(title = "Immigration Enforcement Since Bill Clinton")
+g <- g + geom_vline(xintercept = c(1992,2000,2008))
+g
+
