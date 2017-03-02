@@ -2,6 +2,14 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 6
+
+A Shiny App that allows the user to compare Department of Homelands Security data on the removal (deportation) of "aliens" from 2006 to 2015, among countries and regions of the world.
+
+See folder for data and Shiny files.  The app is available at:
+
+https://lukewolcott.shinyapps.io/InTheResistance_Week06/
+
 ## Week 5
 
 Looks at immigration enforcement -- apprehensions, removals, and forced returns -- by US immigration offices from 1925-2015.
