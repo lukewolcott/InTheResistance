@@ -129,8 +129,7 @@ shinyServer(function(input, output) {
             
             # FINAL PLOT CODE
             g <- ggplot()
-            if (!is.null(dim(melt)))
-                  g <- g + geom_line(data=meltRgns, aes(Year,Number,color=RegionOrCountry,linetype=Status))
+            g <- g + geom_line(data=meltRgns, aes(Year,Number,color=RegionOrCountry,linetype=Status))
             g <- g+geom_line(data=meltCnts, aes(Year,Number,color=RegionOrCountry,linetype=Status))
             g
       })

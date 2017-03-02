@@ -21,15 +21,15 @@ shinyUI(fluidPage(
                               ),
                               tabPanel("Countries",
                                        p(em("sorted in decreasing order of annual average; top 30 only")),
-                                       checkboxInput("Cin0", "Total", value=TRUE),
+                                       checkboxInput("Cin0", "Total"),
                                        checkboxInput("Cin1", "Mexico"),
                                        checkboxInput("Cin2", "Guatemala"),
-                                       checkboxInput("Cin3", "Honduras", value=TRUE),
+                                       checkboxInput("Cin3", "Honduras"),
                                        checkboxInput("Cin4", "El Salvador"),
                                        checkboxInput("Cin5", "Brazil"),
                                        checkboxInput("Cin6", "Dominican Republic"),
-                                       checkboxInput("Cin7", "Colombia"),
-                                       checkboxInput("Cin8", "Ecuador"),
+                                       checkboxInput("Cin7", "Colombia", value=TRUE),
+                                       checkboxInput("Cin8", "Ecuador", value=TRUE),
                                        checkboxInput("Cin9", "Nicaragua"),
                                        checkboxInput("Cin10", "Jamaica"),
                                        checkboxInput("Cin11", "Canada"),
@@ -60,7 +60,7 @@ shinyUI(fluidPage(
                               tabPanel("Introduction",
                                        br(),
                                        p(em("In late February 2017 the Trump Administration announced new immigration policies
-                                         regarding deportation of undocumented immigrants.  Part of the new 
+                                         regarding deportation of undocumented immigrants.  Parts of the new 
                                           policies change how people with criminal records are treated.  I thought it would be
                                          interesting to look at trends over time of rates of removal of these 'aliens'.
                                          A good summary of the policy changes is here:")),
@@ -79,6 +79,7 @@ shinyUI(fluidPage(
                                        h4("How do I use this website?"),
                                        em("On the sidebar, select the status of alien that 
                                           you're interested in.  Select any geographical regions and countries.
+                                          (At the moment, you'll get an error if you deselect all of them.)
                                           The plot, which appears in
                                           the PLOT tab, will update automatically.")
                               ),
