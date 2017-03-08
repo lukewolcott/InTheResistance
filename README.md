@@ -2,6 +2,14 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 7
+
+This week is whimsical: using a dataset off the 500 largest Indian cities, I build machine learning algorithms that predict with 84% accuracy that the average large Indian city is in the Central region of the country.
+
+See folder for data files and R markdown report with all code used, or read at:
+
+https://lukewolcott.github.io/InTheResistance/Week7/predict_region.html
+
 ## Week 6
 
 A Shiny App that allows the user to compare Department of Homelands Security data on the removal (deportation) of "aliens" from 2006 to 2015, among countries and regions of the world.
