@@ -1,0 +1,145 @@
+---
+title: "With about 84% accuracy, the average large Indian city is in the central region"
+author: "Luke Wolcott"
+date: "March 7, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+This is sort of a whimsical use of machine learning algorithms, to classify the 500 largest Indian cities and use it to predict the location of other cities.
+
+The CSV file `cities_r2.csv` comes from <https://www.kaggle.com/zed9941/datasets>, a Kaggle dataset of information on the 500 largest Indian cities.
+
+The goal is to use a machine learning algorithm to predict the region --  North, South, East, West, Northeast, or Central -- of an Indian city.
+
+### Data cleaning and feature engineering
+
+In order to not be skewed by city size, we want to remove data related to population, and couch all that information as rates.  And then we bin all the cities into six different geographical regions, as laid out here: <https://en.wikipedia.org/wiki/List_of_regions_of_India>.
+
+```{r, cache=TRUE}
+data <- read.csv("cities_r2.csv")
+```
+
+```{r, cache=TRUE}
+# feature engineering
+data$young_pop_rate_total <- 100*data$X0.6_population_total/data$population_total
+data$young_pop_rate_male <- 100*data$X0.6_population_male/data$population_male
+data$young_pop_rate_female <- 100*data$X0.6_population_female/data$population_female
+data$effective_grad_rate_total <- 100*data$total_graduates/(data$population_total-data$X0.6_population_total)
+data$effective_grad_rate_male <- 100*data$male_graduates/(data$population_male-data$X0.6_population_male)
+data$effective_grad_rate_female <- 100*data$female_graduates/(data$population_female-data$X0.6_population_female)
+
+# subsetting
+data <- data[,-c(2,4,5:13,19:22)]
+
+# define regions
+Central <- c("CHHATTISGARH", "MADHYA PRADESH")
+East <- c("BIHAR", "JHARKHAND", "WEST BENGAL", "ORISSA",
+          "ANDAMAN & NICOBAR ISLANDS")
+North <- c("CHANDIGARH", "HARYANA", "HIMACHAL PRADESH",
+           "JAMMU & KASHMIR", "PUNJAB", "RAJASTHAN",
+           "UTTARAKHAND", "UTTAR PRADESH", "NCT OF DELHI")
+Northeast <- c("ASSAM", "MANIPUR ", "MEGHALAYA","MIZORAM",
+               "NAGALAND","TRIPURA")
+South <- c("ANDHRA PRADESH", "KARNATAKA", "KERALA", 
+           "TAMIL NADU", "PUDUCHERRY")
+West <- c("GUJARAT", "MAHARASHTRA")
+
+# assign regions
+data$region <- "X"
+for (i in 1:nrow(data)){
+      state <- as.character(data[i,2])
+      if (state %in% North)
+            data[i,14] <- "North"
+      else if (state %in% East)
+            data[i,14] <- "East"
+      else if (state %in% South)
+            data[i,14] <- "South"
+      else if (state %in% West)
+            data[i,14] <- "West"
+      else if (state %in% Northeast)
+            data[i,14] <- "Northeast"
+      else if (state %in% Central)
+            data[i,14] <- "Central"
+}
+data$region <- as.factor(data$region)
+names(data)
+```
+
+Finally, we remove the names of the city and the state.
+
+```{r}
+d <- data
+d$name_of_city <- NULL
+d$state_name <- NULL
+```
+
+### Machine learning models
+
+Create the training and test subsets.
+
+```{r}
+library(caret)
+set.seed(134)
+inTrain <- createDataPartition(d$region, p=0.80, list=FALSE)
+training <- d[inTrain,]
+test <- d[-inTrain,]
+```
+
+First I'll do a simple classification tree.
+
+```{r}
+fitTree <- train(region ~ ., data = training, method="rpart")
+predTree <- predict(fitTree,test)
+confMfitTree <- confusionMatrix(predTree,test$region)
+confMfitTree$overall[1]
+```
+
+Now let's try a random forest instead.
+
+```{r}
+library(randomForest)
+fitRF <- randomForest(region ~ ., data=training, method="class")
+#fitRF <- train(region~., data=training, method="rf",prox=TRUE)
+predRF <- predict(fitRF,test)
+confMfitRF <- confusionMatrix(predRF, test$region)
+confMfitRF$overall[1]
+```
+
+I could try a k-nearest neighbors.
+
+```{r}
+fitKNN <- train(region~., data=training, method="knn")
+predKNN <- predict(fitKNN,test)
+confMfitKNN <- confusionMatrix(predKNN, test$region)
+confMfitKNN$overall[1]
+```
+
+Now what if I try some sort of boosting.
+
+```{r,cache=TRUE}
+fitGBM <- train(region~., data=training, method="gbm",verbose=FALSE)
+predGBM <- predict(fitGBM,test)
+confMfitGBM <- confusionMatrix(predGBM,test$region)
+confMfitGBM$overall[1]
+confMfitGBM$table
+```
+
+### Predictions
+
+Here's a cute prediciton.  I can make a new "city" that is the average of all the other cities, and see what my models predict for it.
+
+```{r}
+e <- d
+e$region <- NULL
+averageCity <- colMeans(e)
+averageCity <- as.data.frame(averageCity)
+averageCity
+predict(fitGBM,t(averageCity))
+```
+
+A fun next step would be to find this data for some other city in another country, and see what it gets classified as.  Maybe London belongs in South India, and Los Angeles in West India?
