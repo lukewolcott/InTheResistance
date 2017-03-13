@@ -1,0 +1,66 @@
+---
+title: "Art Grants in LA"
+author: "Luke Wolcott"
+date: "March 13, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+---
+
+In mid-January The Hill [reported](http://thehill.com/policy/finance/314991-trump-team-prepares-dramatic-cuts) that Trump was considering cutting funding to the National Endowment for the Arts.  The Heritage Foundation, a conservative think tank that was [reportedly very influential](http://www.cnn.com/2016/12/06/politics/donald-trump-heritage-foundation-transition/) in Trump's transition process, [argues that](http://www.huffingtonpost.com/entry/trump-reportedly-plans-to-end-national-arts-funding_us_5880de61e4b070d8cad0e184) 
+
+> “Taxpayer assistance of the arts is neither necessary nor prudent [...] Taxpayers should not be forced to pay for plays, paintings, pageants, and scholarly journals, regardless of the works’ attraction or merit.”
+
+I thought it would be interesting to look at data on public funding of the arts, and I found an interesting dataset for Los Angeles County.  The question is: **what types of art are funded, and how much?**
+
+---
+
+The dataset ([downloaded from here](https://data.lacounty.gov/Arts-and-Culture/Organizational-Grants-for-Arts-Services/73tm-r9gy)) contains information about art grants given through the Organizational Grant Program of the Los Angeles County Arts Commission, over the three application years of 2014-15, 2015-16, and 2016-17.  
+
+These plots were done with the plotly library, so they have some nice interactivity to them.
+
+
+```{r}
+# Data and cleaning
+data <- read.csv("Organizational_Grants_for_Arts_Services.csv")
+library(plotly)
+library(dplyr)
+```
+
+
+```{r}
+# Convert the grant award amount to a numeric that is easy to work with.  
+# Fix a typo in the name of one of the disciplines.
+data$Grant.Award <- sub('.','',as.character(data$Grant.Award))
+data$Grant.Award <- as.numeric(data$Grant.Award)
+for (i in 1:568)
+      if (data[i,2] == "Arts Service/")
+            data[i,2] <- as.factor("Arts Service ")
+```
+
+
+### A. Spread of money awarded, by discipline
+
+```{r, echo=FALSE}
+plot_ly(data, y = ~Grant.Award, color = ~Discipline, type = "box")
+```
+
+### B. Spread of money awarded, by application year
+
+```{r, echo=FALSE}
+plot_ly(data, y = ~Grant.Award, color = ~Application.Year, type="box")
+```
+
+### C. Number of grants awarded versus total amount awarded, by discipline
+
+```{r, echo=FALSE}
+by_disc <- group_by(data, Discipline)
+d <-summarize(by_disc, Total.Amount.Awarded = sum(Grant.Award), Number.Awarded = length(Grant.Award))
+plot_ly(d, x=~Number.Awarded, y=~Total.Amount.Awarded, mode="markers", text = ~Discipline)
+```
+
+---

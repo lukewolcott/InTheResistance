@@ -2,6 +2,14 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 8
+
+Looks at art grants given through the Organizational Grant Program of the Los Angeles County Arts Commission, over the three application years of 2014-15, 2015-16, and 2016-17: what types of art are funded, and how much?
+
+See folder for data file and R markdown report with all code used, or read at:
+
+https://lukewolcott.github.io/InTheResistance/Week8/ArtGrants.html
+
 ## Week 7
 
 This week is whimsical: using a dataset off the 500 largest Indian cities, I build machine learning algorithms that predict with 84% accuracy that the average large Indian city is in the Central region of the country.
