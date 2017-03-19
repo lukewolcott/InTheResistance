@@ -1,0 +1,302 @@
+Rank, City, State, PopIn2015, Latitude, Longitude
+1, New York, New, 8550405, 40.6643, -73.9385
+2, Los Angeles, California, 3971883, 34.0194, -118.4108
+3, Chicago, Illinois, 2720546, 41.8376, -87.6818
+4, Houston, Texas, 2296224, 29.7805, -95.3863
+5, Philadelphia, Pennsylvania, 1567442, 40.0094, -75.1333
+6, Phoenix, Arizona, 1563025, 33.5722, -112.0880
+7, San Antonio, Texas, 1469845, 29.4724, -98.5251
+8, San Diego, California, 1394928, 32.8153, -117.1350
+9, Dallas, Texas, 1300092, 32.7757, -96.7967
+10, San Jose, California, 1026908, 37.2969, -121.8193
+11, Austin, Texas, 931830, 30.3072, -97.7560
+12, Jacksonville, Florida, 868031, 30.3370, -81.6613
+13, San Francisco, California, 864816, 37.7751, -122.4193
+14, Indianapolis, Indiana, 853173, 39.7767, -86.1459
+15, Columbus, Ohio, 850106, 39.9848, -82.9850
+16, Fort Worth, Texas, 833319, 32.7795, -97.3463
+17, Charlotte, North, 827097, 35.2087, -80.8307
+18, Seattle, Washington, 684451, 47.6205, -122.3509
+19, Denver, Colorado, 682545, 39.7618, -104.8806
+20, El Paso, Texas, 681124, 31.8484, -106.4270
+21, Detroit, Michigan, 677116, 42.3830, -83.1022
+22, Washington, District, 672228, 38.9041, -77.0171
+23, Boston, Massachusetts, 667137, 42.3320, -71.0202
+24, Memphis, Tennessee, 655770, 35.1035, -89.9785
+25, Nashville, Tennessee, 654610, 36.1718, -86.7850
+26, Portland, Oregon, 632309, 45.5370, -122.6500
+27, Oklahoma City, Oklahoma, 631346, 35.4671, -97.5137
+28, Las Vegas, Nevada, 623747, 36.2277, -115.2640
+29, Baltimore, Maryland, 621849, 39.3002, -76.6105
+30, Louisville, Kentucky, 615366, 38.1781, -85.6667
+31, Milwaukee, Wisconsin, 600155, 43.0633, -87.9667
+32, Albuquerque, New, 559121, 35.1056, -106.6474
+33, Tucson, Arizona, 531641, 32.1543, -110.8711
+34, Fresno, California, 520052, 36.7827, -119.7945
+35, Sacramento, California, 490712, 38.5666, -121.4686
+36, Kansas City, Missouri, 475378, 39.1252, -94.5511
+37, Long Beach, California, 474140, 33.8091, -118.1553
+38, Mesa, Arizona, 471825, 33.4019, -111.7174
+39, Atlanta, Georgia, 463878, 33.7629, -84.4227
+40, Colorado Springs, Colorado, 456568, 38.8673, -104.7607
+41, Virginia Beach, Virginia, 452745, 36.7793, -76.0240
+42, Raleigh, North, 451066, 35.8302, -78.6414
+43, Omaha, Nebraska, 443885, 41.2647, -96.0419
+44, Miami, Florida, 441003, 25.7752, -80.2086
+45, Oakland, California, 419267, 37.7699, -122.2256
+46, Minneapolis, Minnesota, 410939, 44.9633, -93.2683
+47, Tulsa, Oklahoma, 403505, 36.1279, -95.9023
+48, Wichita, Kansas, 389965, 37.6907, -97.3427
+49, New Orleans, Louisiana, 389617, 30.0686, -89.9390
+50, Arlington, Texas, 388125, 32.7007, -97.1247
+51, Cleveland, Ohio, 388072, 41.4781, -81.6795
+52, Bakersfield, California, 373640, 35.3212, -119.0183
+53, Tampa, Florida, 369075, 27.9701, -82.4797
+54, Aurora, Colorado, 359407, 39.7082, -104.8235
+55, Honolulu, Hawai, 352769, 21.3259, -157.8453
+56, Anaheim, California, 350742, 33.8555, -117.7601
+57, Santa Ana, California, 335400, 33.7365, -117.8826
+58, Corpus Christi, Texas, 324074, 27.7543, -97.1734
+59, Riverside, California, 322424, 33.9381, -117.3932
+60, St. Louis, Missouri, 315685, 38.6357, -90.2446
+61, Lexington, Kentucky, 314488, 38.0402, -84.4584
+62, Stockton, California, 305658, 37.9763, -121.3133
+63, Pittsburgh, Pennsylvania, 304391, 40.4398, -79.9766
+64, Saint Paul, Minnesota, 300851, 44.9489, -93.1039
+65, Anchorage, Alaska, 298695, 61.2176, -149.8953
+66, Cincinnati, Ohio, 298550, 39.1399, -84.5064
+67, Henderson, Nevada, 285667, 36.0122, -115.0375
+68, Greensboro, North, 285342, 36.0965, -79.8271
+69, Plano, Texas, 283558, 33.0508, -96.7479
+70, Newark, New, 281944, 40.7242, -74.1726
+71, Toledo, Ohio, 279789, 41.6641, -83.5819
+72, Lincoln, Nebraska, 277348, 40.8090, -96.6804
+73, Orlando, Florida, 270934, 28.4159, -81.2988
+74, Chula Vista, California, 265757, 32.6277, -117.0152
+75, Jersey City, New, 264290, 40.7114, -74.0648
+76, Chandler, Arizona, 260828, 33.2829, -111.8549
+77, Fort Wayne, Indiana, 260326, 41.0882, -85.1439
+78, Buffalo, New, 258071, 42.8925, -78.8597
+79, Durham, North, 257636, 35.9810, -78.9056
+80, St. Petersburg, Florida, 257083, 27.7620, -82.6441
+81, Irvine, California, 256927, 33.6784, -117.7713
+82, Laredo, Texas, 255473, 27.5477, -99.4869
+83, Lubbock, Texas, 249042, 33.5665, -101.8867
+84, Madison, Wisconsin, 248951, 43.0878, -89.4301
+85, Gilbert, Arizona, 247542, 33.3102, -111.7422
+86, Norfolk, Virginia, 246393, 36.9230, -76.2446
+87, Reno, Nevada, 241445, 39.4745, -119.7765
+89, Glendale, Arizona, 240126, 33.5331, -112.1899
+90, Hialeah, Florida, 237069, 25.8699, -80.3029
+91, Garland, Texas, 236897, 32.9098, -96.6304
+92, Scottsdale, Arizona, 236839, 33.6687, -111.8237
+93, Irving, Texas, 236607, 32.8577, -96.9700
+94, Chesapeake, Virginia, 235429, 36.6794, -76.3018
+95, North Las Vegas, Nevada, 234807, 36.2830, -115.0893
+96, Fremont, California, 232206, 37.4944, -121.9411
+97, Baton Rouge, Louisiana, 228590, 30.4485, -91.1259
+98, Richmond, Virginia, 220289, 37.5314, -77.4760
+99, Boise, Idaho, 218281, 43.5985, -116.2311
+100, San Bernardino, California, 216108, 34.1393, -117.2953
+101, Spokane, Washington, 213272, 47.6736, -117.4166
+102, Birmingham, Alabama, 212461, 33.5274, -86.7990
+103, Modesto, California, 211266, 37.6609, -120.9891
+104, Des Moines, Iowa, 210330, 41.5739, -93.6167
+105, Rochester, New, 209802, 43.1699, -77.6169
+106, Tacoma, Washington, 207948, 47.2522, -122.4598
+107, Fontana, California, 207460, 34.1088, -117.4627
+108, Oxnard, California, 207254, 34.2023, -119.2046
+109, Moreno Valley, California, 204198, 33.9233, -117.2057
+110, Fayetteville, North, 201963, 35.0851, -78.9803
+111, Huntington Beach, California, 201899, 33.6906, -118.0093
+112, Yonkers, New, 201116, 40.9459, -73.8674
+113, Glendale, California, 201020, 34.1814, -118.2458
+114, Aurora, Illinois, 200661, 41.7635, -88.2901
+115, Montgomery, Alabama, 200602, 32.3463, -86.2686
+116, Columbus, Georgia, 200579, 32.5102, -84.8749
+117, Amarillo, Texas, 198645, 35.1978, -101.8287
+118, Little Rock, Arkansas, 197992, 34.7254, -92.3586
+119, Akron, Ohio, 197542, 41.0805, -81.5214
+120, Shreveport, Louisiana, 197204, 32.4670, -93.7927
+121, Augusta, Georgia, 197182, 33.3655, -82.0734
+122, Grand Rapids, Michigan, 195097, 42.9612, -85.6556
+123, Mobile, Alabama, 194288, 30.6684, -88.1002
+124, Salt Lake City, Utah, 192672, 40.7785, -111.9314
+125, Huntsville, Alabama, 190582, 34.7843, -86.5390
+126, Tallahassee, Florida, 189907, 30.4551, -84.2534
+127, Grand Prairie, Texas, 187809, 32.6842, -97.0210
+128, Overland Park, Kansas, 186515, 38.8890, -94.6906
+129, Knoxville, Tennessee, 185291, 35.9709, -83.9465
+130, Worcester, Massachusetts, 184815, 42.2695, -71.8078
+131, Brownsville, Texas, 183887, 26.0183, -97.4538
+132, Newport News, Virginia, 182385, 37.0760, -76.5217
+133, Santa Clarita, California, 182371, 34.4049, -118.5047
+134, Port St. Lucie, Florida, 179413, 27.2810, -80.3838
+135, Providence, Rhode, 179207, 41.8231, -71.4188
+136, Fort Lauderdale, Florida, 178590, 26.1413, -80.1439
+137, Chattanooga, Tennessee, 176588, 35.0665, -85.2471
+138, Tempe, Arizona, 175826, 33.3884, -111.9318
+139, Oceanside, California, 175691, 33.2246, -117.3062
+140, Garden Grove, California, 175393, 33.7788, -117.9605
+141, Rancho Cucamonga, California, 175236, 34.1233, -117.5642
+142, Cape Coral, Florida, 175229, 26.6431, -81.9973
+143, Santa Rosa, California, 174972, 38.4468, -122.7061
+144, Vancouver, Washington, 172860, 45.6372, -122.5965
+145, Sioux Falls, South, 171544, 43.5383, -96.7320
+146, Peoria, Arizona, 171237, 33.7877, -112.3111
+147, Ontario, California, 171214, 34.0395, -117.6088
+148, Jackson, Mississippi, 170674, 32.3158, -90.2128
+149, Elk Grove, California, 166913, 38.4144, -121.3849
+150, Springfield, Missouri, 166810, 37.1942, -93.2913
+151, Pembroke Pines, Florida, 166611, 26.0212, -80.3404
+152, Salem, Oregon, 164549, 44.9237, -123.0231
+153, Corona, California, 164226, 33.8624, -117.5639
+154, Eugene, Oregon, 163460, 44.0567, -123.1162
+155, McKinney, Texas, 162898, 33.2012, -96.6680
+156, Fort Collins, Colorado, 161175, 40.5482, -105.0648
+157, Lancaster, California, 161103, 34.6936, -118.1753
+158, Cary, North, 159769, 35.7821, -78.8141
+159, Palmdale, California, 158351, 34.5913, -118.1090
+160, Hayward, California, 158289, 37.6281, -122.1063
+161, Salinas, California, 157380, 36.6902, -121.6337
+162, Frisco, Texas, 154407, 33.1510, -96.8193
+163, Springfield, Massachusetts, 154341, 42.1155, -72.5400
+164, Pasadena, Texas, 153784, 29.6583, -95.1505
+165, Macon, Georgia, 153515, 32.505, -83.396
+166, Alexandria, Virginia, 153511, 38.8183, -77.0820
+167, Pomona, California, 153266, 34.0586, -117.7613
+168, Lakewood, Colorado, 152597, 39.6989, -105.1176
+169, Sunnyvale, California, 151754, 37.3858, -122.0263
+170, Escondido, California, 151451, 33.1336, -117.0732
+171, Kansas City, Kansas, 151306, 39.1225, -94.7418
+172, Hollywood, Florida, 149728, 26.0311, -80.1646
+173, Clarksville, Tennessee, 149176, 36.5664, -87.3452
+174, Torrance, California, 148475, 33.8350, -118.3414
+175, Rockford, Illinois, 148278, 42.2634, -89.0628
+176, Joliet, Illinois, 147861, 41.5181, -88.1584
+177, Paterson, New, 147754, 40.9147, -74.1628
+178, Bridgeport, Connecticut, 147629, 41.1874, -73.1957
+179, Naperville, Illinois, 147100, 41.7492, -88.1620
+180, Savannah, Georgia, 145674, 32.0025, -81.1536
+181, Mesquite, Texas, 144788, 32.7639, -96.5924
+182, Syracuse, New, 144142, 43.0410, -76.1436
+183, Pasadena, California, 142250, 34.1606, -118.1396
+184, Orange, California, 140992, 33.8048, -117.8249
+185, Fullerton, California, 140847, 33.8857, -117.9280
+186, Killeen, Texas, 140806, 31.0777, -97.7320
+187, Dayton, Ohio, 140599, 39.7774, -84.1996
+188, McAllen, Texas, 140269, 26.2185, -98.2461
+189, Bellevue, Washington, 139820, 47.5978, -122.1565
+190, Miramar, Florida, 137132, 25.9770, -80.3358
+191, Hampton, Virginia, 136454, 37.0480, -76.2971
+192, West Valley City, Utah, 136208, 40.6885, -112.0118
+193, Warren, Michigan, 135358, 42.4929, -83.0250
+194, Olathe, Kansas, 134305, 38.8843, -94.8188
+195, Columbia, South, 133803, 34.0298, -80.8966
+196, Thornton, Colorado, 133451, 39.9180, -104.9454
+197, Carrollton, Texas, 133168, 32.9884, -96.8998
+198, Midland, Texas, 132950, 32.0299, -102.1097
+199, Charleston, South, 132609, 32.8179, -79.9589
+200, Waco, Texas, 132356, 31.5601, -97.1860
+201, Sterling Heights, Michigan, 132052, 42.5812, -83.0303
+202, Denton, Texas, 131044, 33.2151, -97.1417
+203, Cedar Rapids, Iowa, 130405, 41.9670, -91.6778
+204, New Haven, Connecticut, 130322, 41.3108, -72.9250
+205, Roseville, California, 130269, 38.7657, -121.3032
+206, Gainesville, Florida, 130128, 29.6788, -82.3459
+207, Visalia, California, 130104, 36.3272, -119.3234
+208, Coral Springs, Florida, 129485, 26.2708, -80.2593
+209, Thousand Oaks, California, 129339, 34.1933, -118.8742
+210, Elizabeth, New, 129007, 40.6663, -74.1935
+211, Stamford, Connecticut, 128874, 41.0799, -73.5460
+212, Concord, California, 128667, 37.9722, -122.0016
+213, Surprise, Arizona, 128422, 33.6706, -112.4527
+214, Lafayette, Louisiana, 127657, 30.2116, -92.0314
+215, Topeka, Kansas, 127265, 39.0362, -95.6948
+216, Kent, Washington, 126952, 47.3853, -122.2169
+217, Simi Valley, California, 126788, 34.2669, -118.7485
+218, Santa Clara, California, 126215, 37.3646, -121.9679
+219, Murfreesboro, Tennessee, 126118, 35.8522, -86.4161
+220, Hartford, Connecticut, 124006, 41.7660, -72.6833
+221, Athens, Georgia, 122604, 33.9496, -83.3701
+222, Victorville, California, 122225, 34.5277, -117.3536
+223, Abilene, Texas, 121721, 32.4545, -99.7381
+224, Vallejo, California, 121253, 38.1079, -122.2639
+225, Berkeley, California, 120972, 37.8667, -122.2991
+226, Norman, Oklahoma, 120284, 35.22, -97.44
+227, Allentown, Pennsylvania, 120207, 40.5940, -75.4782
+228, Evansville, Indiana, 119943, 37.9877, -87.5347
+229, Columbia, Missouri, 119108, 38.9479, -92.3261
+230, Odessa, Texas, 118968, 31.8804, -102.3434
+231, Fargo, North, 118523, 46.8652, -96.8290
+232, Beaumont, Texas, 118129, 30.0843, -94.1458
+233, Independence, Missouri, 117255, 39.0853, -94.3513
+234, Ann Arbor, Michigan, 117070, 42.2756, -83.7313
+235, El Monte, California, 116732, 34.0746, -118.0291
+236, Springfield, Illinois, 116565, 39.7639, -89.6708
+237, Round Rock, Texas, 115997, 30.5237, -97.6674
+238, Wilmington, North, 115933, 34.2092, -77.8858
+239, Arvada, Colorado, 115368, 39.8097, -105.1066
+240, Provo, Utah, 115264, 40.2453, -111.6448
+241, Peoria, Illinois, 115070, 40.7523, -89.6171
+242, Lansing, Michigan, 115056, 42.7098, -84.5562
+243, Downey, California, 114219, 33.9382, -118.1309
+244, Carlsbad, California, 113453, 33.1239, -117.2828
+245, Costa Mesa, California, 113204, 33.6659, -117.9123
+246, Miami Gardens, Florida, 113187, 25.9489, -80.2436
+247, Westminster, Colorado, 113130, 39.8822, -105.0644
+248, Clearwater, Florida, 113003, 27.9795, -82.7663
+249, Fairfield, California, 112970, 38.2568, -122.0397
+250, Rochester, Minnesota, 112225, 44.0154, -92.4772
+251, Elgin, Illinois, 112111, 42.0396, -88.3217
+252, Temecula, California, 112011, 33.5019, -117.1246
+253, West Jordan, Utah, 111946, 40.6023, -112.0010
+254, Inglewood, California, 111666, 33.9561, -118.3443
+255, Richardson, Texas, 110815, 32.9723, -96.7081
+256, Lowell, Massachusetts, 110699, 42.6389, -71.3221
+257, Gresham, Oregon, 110553, 45.5023, -122.4416
+258, Antioch, California, 110542, 37.9775, -121.7976
+259, Cambridge, Massachusetts, 110402, 42.3760, -71.1183
+260, High Point, North, 110268, 35.9855, -79.9902
+261, Billings, Montana, 110263, 45.7895, -108.5499
+262, Manchester, New, 110229, 42.9847, -71.4439
+263, Murrieta, California, 109830, 33.5719, -117.1907
+264, Centennial, Colorado, 109741, 39.5906, -104.8691
+267, Pueblo, Colorado, 109412, 38.2731, -104.6124
+268, Pearland, Texas, 108821, 29.5544, -95.2958
+269, Waterbury, Connecticut, 108802, 41.5585, -73.0367
+270, West Covina, California, 108484, 34.0559, -117.9099
+271, North Charleston, South, 108304, 32.8853, -80.0169
+272, Everett, Washington, 108010, 48.0033, -122.1742
+273, College Station, Texas, 107889, 30.6013, -96.3144
+274, Palm Bay, Florida, 107888, 27.9856, -80.6626
+275, Pompano Beach, Florida, 107762, 26.2426, -80.1290
+276, Boulder, Colorado, 107349, 40.0175, -105.2797
+277, Norwalk, California, 107140, 33.9069, -118.0834
+278, West Palm Beach, Florida, 106779, 26.7483, -80.1266
+279, Broken Arrow, Oklahoma, 106563, 36.0365, -95.7810
+280, Daly City, California, 106562, 37.7009, -122.4650
+281, Sandy Springs, Georgia, 105330, 33.5615, -84.227
+282, Burbank, California, 105319, 34.1890, -118.3249
+283, Green Bay, Wisconsin, 105207, 44.5207, -87.9842
+284, Santa Maria, California, 105093, 34.9332, -120.4438
+285, Wichita Falls, Texas, 104710, 33.9067, -98.5259
+286, Lakeland, Florida, 104401, 28.0411, -81.9589
+287, Clovis, California, 104180, 36.4931, -119.4211
+288, Lewisville, Texas, 104039, 33.0383, -97.0061
+289, Tyler, Texas, 103700, 32.35, -95.30
+290, El Cajon, California, 103679, 32.8017, -116.9605
+291, San Mateo, California, 103536, 37.5542, -122.3131
+292, Rialto, California, 103132, 34.1118, -117.3883
+293, Edison, New, 102701, 40.5040, -74.3494
+294, Davenport, Iowa, 102582, 41.5541, -90.6040
+295, Hillsboro, Oregon, 102347, 45.5167, -122.9833
+296, Woodbridge, New, 102105, 40.5608, -74.2926
+297, Las Cruces, New, 101643, 32.3197, -106.7653
+298, South Bend, Indiana, 101516, 41.6769, -86.2690
+299, Vista, California, 100890, 33.1936, -117.2411
+300, Greeley, Colorado, 100883, 40.4167, -104.7167
+301, Davie, Florida, 100882, 26.0814, -80.2803
+302, San Angelo, Texas, 100450, 31.45, -100.45
+303, Jurupa Valley, California, 100314, 33.0011, -117.4706
+304, Renton, Washington, 100242, 47.4867, -122.1953
