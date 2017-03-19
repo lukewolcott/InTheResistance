@@ -60,7 +60,7 @@ https://lukewolcott.github.io/InTheResistance/Week2/WomensMarchByState.html
 
 ## Week 1
 
-Looks at relative sizes of US Women's March protests on Jan 21, 2017.
+Looks at relative sizes of US Women's March protests on Jan 21, 2017.  Uses a Python script to scrape a Wikipedia site and extract population data.
 
 See folder for data files and R markdown report, or read at:
 
