@@ -2,6 +2,14 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 9
+
+Clusters Chicago's 77 "Community Areas" using city data on 21 health factors, and then compares these clusters using economic data on per capita income, unemployment, etc.  Includes a bit of topological data analysis for finding the right number of clusters.
+
+See folder for data file and R markdown report with all code used, or read at:
+
+https://lukewolcott.github.io/InTheResistance/Week9/ClusteringChicago.html
+
 ## Week 8
 
 Looks at art grants given through the Organizational Grant Program of the Los Angeles County Arts Commission, over the three application years of 2014-15, 2015-16, and 2016-17: what types of art are funded, and how much?
