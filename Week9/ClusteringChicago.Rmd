@@ -1,0 +1,215 @@
+---
+title: "Clustering Chicago’s Community Areas"
+author: "Luke Wolcott"
+date: "March 19, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+On my recent spring break to Chicago (really more of a "break from spring") I became curious about the city's 77 different "Community Areas".  [Here is a map of these areas.](https://www.cityofchicago.org/content/dam/city/depts/doit/general/GIS/Chicago_Maps/Community_Areas/Community_Areas_w_Number.pdf)
+
+On the City of Chicago's data website I found a nice dataset (downloaded from [here](https://data.cityofchicago.org/Health-Human-Services/Public-Health-Statistics-Selected-public-health-in/iqnk-2tcu), codebook [here](https://data.cityofchicago.org/api/assets/2107948F-357D-4ED7-ACC2-2E9266BBFFA2)) that contains information on 27 different public health and economic factors for each of the 77 areas.  It has information on 21 health factors: fertility rates, cancer rates, lead poisoning, STD rates, etc., as well six economic factors: "Below.Poverty.Level", "Crowded.Housing", "Dependency" "No.High.School.Diploma", "Per.Capita.Income", and "Unemployment".
+
+My question is: **How does this public health data cluster the 77 Community Areas? **
+
+I'm interested in separating the primary health data, on rates of cancer, fertility, STDs, etc, from the secondary economic data.  So I'll form my clusters using the 21 health data columns, and then look at how these clusters occupy economic space.
+
+### Cleaning and Exploratory Data Analysis
+
+There are a small number of NAs, and I used median values to fill these in.  Most values in the dataset are in the 0-100 range, but there are a few columns with high values (e.g. gonorrhea rates per 100,000).  These factors were dominating my initial clustering analyses, so I decided to center and scale each column.  (See RMarkdown file for code.)
+
+```{r}
+data <- read.csv("Public_Health_Statistics-_Selected_public_health_indicators_by_Chicago_community_area.csv", na.strings = c("","."))
+
+# impute median values for two columns with NAs
+med_fm <- median(na.omit(data$Gonorrhea.in.Females))
+med_m <- median(na.omit(data$Gonorrhea.in.Males))
+for (i in 1:77){
+      if (is.na(data[i,21]))
+            data[i,21] <- med_fm
+      if (is.na(data[i,22]))
+            data[i,22] <- med_m
+}
+
+# impute median values for two more NAs in row 54
+data[54,19] <- median(na.omit(data[,19]))
+data[54,20] <- median(na.omit(data[,20]))
+
+# scale all numeric columns
+data_scaled <- data
+for (i in 3:29)
+      data_scaled[,i] <- scale(data[,i])
+
+set.seed(134) 
+```
+
+### Clustering with k=3
+
+First I'll do the clustering with k=3 centers, again just using the 21 health data columns.  Here is a table of how many areas are assigned to each of the three clusters.
+
+```{r}
+km <- kmeans(data_scaled[,3:23],3,nstart=20)
+table(km$cluster)
+```
+
+
+```{r}
+smallest_of_three <- min(table(km$cluster))
+smallest_index <- which(table(km$cluster) == smallest_of_three)
+```
+
+Let's look at the smallest cluster, with index `r smallest_index`.  We can check the community areas this has clustered together.
+
+Community area codes (see map link above):
+```{r}
+data_scaled[km$cluster == smallest_index, 1]
+```
+Community area names:
+```{r}
+data_scaled[km$cluster == smallest_index, 2]
+```
+
+Here are the two other clusters:
+
+```{r}
+largest_of_three <- max(table(km$cluster))
+largest_index <- which(table(km$cluster) == largest_of_three)
+x <- 1:3
+middle_index <- x[x!=smallest_index & x!=largest_index]
+```
+
+Codes and names for middle cluster (index `r middle_index`):
+```{r}
+data_scaled[km$cluster == middle_index, 1]
+data_scaled[km$cluster == middle_index, 2]
+```
+
+Codes and names for largest cluster (index `r largest_index`):
+```{r}
+data_scaled[km$cluster == largest_index, 1]
+data_scaled[km$cluster == largest_index, 2]
+```
+
+### Health clusters and economics
+
+These clusters were formed using health statistics.  How do they play out in term of the economic statistics?
+
+Two important economic factors are Per.Capita.Income and Unemployment.  The next plot shows how the three clusters occupy this space.  It does seem that they maintain their clusters.
+
+```{r}
+library(ggplot2)
+g <- ggplot(data, aes(Per.Capita.Income, Unemployment))
+g <- g + geom_point(aes(color=as.factor(km$cluster)))
+g <- g + labs(x="Per Capita Income (dollars)", y="Unemployment rate ")
+g
+```
+
+Two other demographic factors for public health might be crowded housing and education.  The next plot looks at how the three clusters spread in this space; the clustering is not so clear.
+
+```{r}
+g <- ggplot(data, aes(Crowded.Housing, No.High.School.Diploma))
+g <- g + geom_point(aes(color=as.factor(km$cluster)))
+g <- g + labs(x="Crowded Housing (% occupied housing units that are crowded)", y="No High School Diploma (% aged 25+ with no HS diploma)")
+g
+```
+
+
+
+### Which k value is best?
+
+To try and figure out which k value best captures the data, I'll try a range of k values.  Here are two plots.  It's hard for me to interpret these, so maybe there's no clear winner for best value for k.
+
+```{r}
+n <- 15
+x <- 1:n
+y <- rep(0,n)
+z <- rep(0,n)
+for (i in 1:n){
+      km3 <- kmeans(data_scaled[,3:23],i,nstart=20)
+      y[i] <- km3$betweenss/km3$totss
+      z[i] <- sum(km3$withinss)
+}
+
+
+df <- as.data.frame(cbind(x[2:n],y[2:n]))
+g <- ggplot(df, aes(x[2:n],y[2:n])) + geom_line()
+g <- g + labs(x="k = number of centers", y="(Between-cluster sum of squares)/(Total sum of squares)")
+g
+
+df <- as.data.frame(cbind(x[2:n],z[2:n]))
+g <- ggplot(df, aes(x[2:n],z[2:n])) + geom_line()
+g <- g + labs(x="k = number of centers", y="Sum of within-cluster sum of squares")
+g
+```
+
+### Clustering with topological data analysis
+
+On the other hand, maybe topological data analysis can suggest a good k value.  We have 77 points in the 21-dimensional space of health statistics.  Let's look at the barcode of 0-dimensional and 1-dimensional persistent homology for this dataset.
+
+```{r}
+d <- data_scaled[,3:23]
+
+library(TDA)
+maxscale <- 7 
+maxdimension <- 1
+Diag <- ripsDiag(X = d, maxdimension, maxscale, library = "GUDHI")      
+plot(Diag[["diagram"]], barcode = TRUE)
+mtext("Barcode of 0D and 1D persistent homology")
+legend("right", lty=c(1,1), lwd=c(3,3), col=c("red", "black"), legend=c("H1", "H0"))
+```
+
+This seems to suggest that k=5 might be a useful clustering to look at.  (The first long stretch of unchanging H0, around filtration value "time" 4, maintains 5 horizontal black bars.)
+
+### Revisiting with k=5
+
+So we repeat the above analysis with k=5.  Here is a table of how many areas are assigned to each of the five clusters.  They are pretty evenly spread out.
+
+```{r}
+km2 <- kmeans(data_scaled[,3:23],5,nstart=20)
+table(km2$cluster)
+```
+
+
+```{r}
+smallest_of_three <- min(table(km2$cluster))
+smallest_index <- which(table(km2$cluster) == smallest_of_three)
+```
+
+Let's look at the smallest cluster, with index `r smallest_index`.  We can check the community areas this has clustered together.
+
+Community area codes (see map link above):
+```{r}
+data_scaled[km2$cluster == smallest_index, 1]
+```
+Community area names:
+```{r}
+data_scaled[km2$cluster == smallest_index, 2]
+```
+
+The next plots shows how the five clusters spread out in economic spaces.
+
+```{r}
+library(ggplot2)
+g <- ggplot(data, aes(Per.Capita.Income, Unemployment))
+g <- g + geom_point(aes(color=as.factor(km2$cluster)))
+g <- g + labs(x="Per Capita Income (dollars)", y="Unemployment rate ")
+g
+```
+
+
+```{r}
+g <- ggplot(data, aes(Crowded.Housing, No.High.School.Diploma))
+g <- g + geom_point(aes(color=as.factor(km2$cluster)))
+g <- g + labs(x="Crowded Housing (% occupied housing units that are crowded)", y="No High School Diploma (% aged 25+ with no HS diploma)")
+g
+```
+
+
+
+
+--- 
+
+
