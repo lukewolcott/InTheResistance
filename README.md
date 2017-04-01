@@ -2,6 +2,14 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 10
+
+Data visualizations of how mangrove forests around the world changed in 2000-2012.
+
+See folder for data files and R markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week10/MangroveLoss.html
+
 ## Week 9
 
 Clusters Chicago's 77 "Community Areas" using city data on 21 health factors, and then compares these clusters using economic data on per capita income, unemployment, etc.  Includes a bit of topological data analysis for finding the right number of clusters.
