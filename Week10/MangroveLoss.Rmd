@@ -1,0 +1,183 @@
+---
+title: "Change in Global Mangrove Forests, 2000-2012"
+author: "Luke Wolcott"
+date: "March 31, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+
+Recently in the news it was [reported](https://www.nytimes.com/2017/03/15/science/great-barrier-reef-coral-climate-change-dieoff.html?rref=collection%2Ftimestopic%2FReefs&action=click&contentCollection=timestopics&region=stream&module=stream_unit&version=latest&contentPlacement=3&pgtype=collection&_r=0) that the world's coral reefs are dying faster than thought or expected.  This reminded me of my fondness for mangrove forests, which are also massive living ecosystems threatened by climate change. 
+
+My question this week: **How are global mangrove forests doing?**
+
+I found an excellent dataset for this, a [nearly comprehensive ongoing global survey of mangrove forests](http://onlinelibrary.wiley.com/doi/10.1111/geb.12449/abstract).  They have data from 2000-2012 [available here](http://faculty.salisbury.edu/~sehamilton/mangroves/).
+
+I downloaded the file `geb12449-sup-0003-suppinfo.xlsx` and cleaned it up with Excel into `MFWcleaned.csv` (available in the GitHub repo).  There is data on the square kilometers of mangrove forest in 104 different countries, over the years 2000-2012.  
+
+```{r}
+library(dplyr)
+data <- read.csv("MFWcleaned.csv", stringsAsFactors = FALSE)
+codes <- read.csv("ISOCodesAndCountryName.csv", stringsAsFactors = FALSE, na.strings = ".")
+
+# use left join to add on ISO Alpha-3 code
+d <- left_join(data,codes,by=c("ISO_3_Num"="NumericCode"))
+d <- d[,-c(16,17)]
+
+# add a column for percent change
+d$Change <- (d$X2012 - d$X2000)/d$X2000*100
+
+# add a column for total change
+d$AmtLost <- (d$X2012 - d$X2000)
+
+# dropped St. Kitts and Nevis because it's bad data
+d <- d[-91,]
+```
+
+
+### Mangroves are dying
+
+Overall, the world's mangrove area is declining steadily, with a drop of 1.97% from 2000 to 2012.
+
+```{r}
+library(ggplot2)
+year_data <- d[,3:15]
+Year <- 2000:2012
+totals <- as.data.frame(cbind(Year,colSums(year_data)))
+names(totals) <- c("Year", "GlobalMangrove")
+qplot(Year, GlobalMangrove, data=totals, geom="point",main="Global Mangrove area (square kilometers)")
+
+```
+
+
+
+### Maps of global mangrove loss
+
+Plotly uses the ISO alpha codes but the dataset uses ISO numeric codes.  Fortunately I have a conversion table `ISOCodesAndCountryName.csv`, so I added the alpha codes with a left join. 
+
+First, the amount of mangrove loss in each country.    It is pretty fascinating to see the map with some countries (the ones with no mangroves) omitted.  France shows up, but only because it has some tropical Overseas Regions.
+
+```{r}
+library(plotly)
+l <- list(color = toRGB("grey"), width = 0.5)
+
+# specify map projection/options
+g <- list(
+  showframe = FALSE,
+  showcoastlines = FALSE,
+  projection = list(type = 'Mercator')
+)
+
+p <- plot_geo(d) %>%
+  add_trace(
+    z = ~-AmtLost, color = ~-AmtLost, colors = 'Reds',
+    text = ~Country.Name, locations = ~Alpha3Code, marker = list(line = l)
+  ) %>%
+  colorbar(title = 'km^2', tickprefix = '') %>%
+  layout(
+    title = 'Amount of Mangrove Forests Lost 2000-2012',
+    geo = g
+  )
+p
+```
+
+Here is the same map with three outliers -- Indonesia, Malaysia, and Myanmar -- removed.
+
+```{r}
+omit <- c("Indonesia","Malaysia","Myanmar")
+d_trim <- d[!(d$Country.Name %in% omit),]
+plot_geo(d_trim) %>%
+  add_trace(
+    z = ~-AmtLost, color = ~-AmtLost, colors = 'Reds',
+    text = ~Country.Name, locations = ~Alpha3Code, marker = list(line = l)
+  ) %>%
+  colorbar(title = 'km^2', tickprefix = '') %>%
+  layout(
+    title = 'Amount of Mangrove Forests Lost 2000-2012',
+    geo = g
+  )
+
+```
+
+
+The next map shows the percentage of mangrove forest lost by each country with mangroves.
+
+```{r}
+p <- plot_geo(d) %>%
+  add_trace(
+    z = ~-Change, color = ~-Change, colors = 'Blues',
+    text = ~Country.Name, locations = ~Alpha3Code, marker = list(line = l)
+  ) %>%
+  colorbar(title = '%', tickprefix = '') %>%
+  layout(
+    title = 'Percent of Country\'s Mangrove Forests Lost 2000-2012',
+    geo = g
+  )
+
+p
+```
+
+### Mangroves in trouble
+
+Here are the top ten countries with the greatest percentage change and amount lost, along with their 2012 level.
+
+```{r}
+d_short <- d[,c(2,17,18,15)]
+names(d_short) <- c("CountryName", "PercentChange", "AmountLost", "Year2012")
+arrange(d_short,PercentChange)[1:10,]
+arrange(d_short,AmountLost)[1:10,]
+```
+
+From these lists, a few countries stand out: Indonesia (which had 28% of the world's mangroves in 2012), Malaysia, Myanmar, Cambodia, and Guatemala.  The first four are in the same part of the world, and all show the same steady trend.  It seems there was an acceleration around 2006-2009, which may have eased up by 2011-2012.
+
+```{r}
+# make a 2x2 plot of the four of them
+Indonesia <- as.numeric(d[d$Country.Name == "Indonesia", 3:15])
+Malaysia <- as.numeric(d[d$Country.Name == "Malaysia", 3:15])
+Myanmar <- as.numeric(d[d$Country.Name == "Myanmar", 3:15])
+Cambodia <- as.numeric(d[d$Country.Name == "Cambodia", 3:15])
+Guatemala <- as.numeric(d[d$Country.Name == "Guatemala", 3:15])
+
+df <- as.data.frame(cbind(Year,Indonesia,Malaysia,Myanmar,Cambodia,Guatemala))
+
+# use gridExtra library to make 2x2 plots here
+library(gridExtra)
+ 
+p1 <- qplot(Year, Indonesia, df)
+p2 <- qplot(Year, Malaysia, df)
+p3 <- qplot(Year, Myanmar, df)
+p4 <- qplot(Year, Cambodia, df)
+
+grid.arrange(p1,p2,p3,p4, ncol=2, nrow=2,top=quote("Mangrove Area (km^2)"))
+
+
+
+```
+
+As we saw above, Guatemala is also losing its mangroves fast.  It seems that 2006-2010 were bad years over there, too.
+
+```{r}
+qplot(Year, Guatemala, data=df, geom="point",main="Guatemala Mangrove Area (km^2)")
+```
+
+Since Guatemala is far away from Southeast Asia, was there some global acceleration of mangrove loss for a few years around 2006-2010?  We know from the global totals (the first plot), that overall things were more linear.  But maybe for countries with large loss, there was a big drop during those years?  Let's look at two countries in Africa -- Ghana and Cote d'Ivoire -- that had significant percentage loss.  
+
+```{r}
+Ghana <- as.numeric(d[d$Country.Name == "Ghana", 3:15])
+CoteDIvoire <- as.numeric(d[d$Country.Name == "Cote d'Ivoire",3:15])
+df2 <- as.data.frame(cbind(Year,Ghana,CoteDIvoire))
+
+p5 <- qplot(Year, Ghana, data=df2, geom="point")
+p6 <- qplot(Year, CoteDIvoire, data=df2, geom="point")
+grid.arrange(p5,p6,ncol=2,top=quote("Mangrove Area (km^2)"))
+```
+
+These two countries are right next to each other.  So in the end, maybe there was no simultaneous global drop.  Rather, what these countries have in common is that they all had a few particularly bad years.
+
+
+---
+
+
