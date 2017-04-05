@@ -2,6 +2,15 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 11
+
+Continuing the analysis from Week 10, we look for a correlation between a country's mangrove deforestation and its Environmental Performance Index.
+
+See folder for data files and R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week11/MangroveLossEPI.html
+
+
 ## Week 10
 
 Data visualizations of how mangrove forests around the world changed in 2000-2012.
