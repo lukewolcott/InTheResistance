@@ -1,0 +1,92 @@
+---
+title: "Mangrove Loss and the Environmental Performance Index"
+author: "Luke Wolcott"
+date: "April 4, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+[Last week](https://lukewolcott.github.io/InTheResistance/Week10/MangroveLoss.html) I looked at areas of mangrove forests around the globe, and where these forests were dying off or being deforested fastest.  This week I want to continue with mangroves, and ask: **How does a country's loss of mangrove forests relate to other environmental performance factors?**
+
+The [Environmental Performance Index](http://epi.yale.edu/) (EPI) quantifies how a country is doing with regards to environmental policy and ecosystem health, is a score from 0-100.  It is put out by Yale University, who make the data used in their calculation available [here](http://epi.yale.edu/downloads).  This dataset contains an amazing amount of environmental statistics for each country, all in one place.  It does not, however, incorporate data on mangrove loss.  
+
+### 2000-2012 mangrove loss versus 2016 EPI
+
+If mangrove loss is caused by poor environmental stewardship, then we would expect that larger mangrove loss would correlate with lower EPI.  The following plot looks at this relationship.  We're only plotting the countries that have mangrove forests to lose.
+
+```{r}
+library(dplyr)
+mangrove <- read.csv("MFWcleaned.csv", stringsAsFactors = FALSE)
+codes <- read.csv("ISOCodesAndCountryNameMatched.csv", stringsAsFactors = FALSE, na.strings = ".")
+epi <- read.csv("2016EpiScore.csv", stringsAsFactors = FALSE)
+
+# dropped St. Kitts and Nevis because it's bad data
+mangrove <- mangrove[-91,]
+
+# add a column to mangrove for percent change
+mangrove$Percent.Change <- (mangrove$X2012 - mangrove$X2000)/mangrove$X2000*100
+
+# add a column for total change
+mangrove$Amount.Lost <- (mangrove$X2012 - mangrove$X2000)
+
+# use left join to add on ISO Alpha-3 code
+epi_w_code <- left_join(epi,codes,by=c("Country"="CountryName"))
+epi_w_code <- epi_w_code[,-4]
+
+df <- left_join(mangrove[,c(1,16,17)],epi_w_code,by=c("ISO_3_Num"="NumericCode"))
+
+```
+
+
+
+```{r}
+# plot EPI versus 2000-2012 mangrove loss.
+library(ggplot2)
+library(plotly)
+#g <- qplot(Change, X2016.EPI.Score, data=df)
+plot_ly(df, x=~Percent.Change, y=~EPI.Score.2016, mode="markers", text=~Country)
+```
+
+### One more try
+
+It doesn't really look like there's any correlation.  Let's try putting it on a log scale (and to do this we'll switch to Percent.Loss = -Percent.Change, and replace 0 change with 0.01).
+
+```{r}
+df$Log.Percent.Loss <- log(-df$Percent.Change+0.01)
+plot_ly(df, x=~Log.Percent.Loss, y=~EPI.Score.2016, mode="markers", text=~Country)
+```
+
+It really does not seem like the Environmental Performance Index correlates with 2000-2012 mangrove forest loss levels.  There are countries like Bangladesh, with a low EPI of 42% but barely any mangrove loss.  There's Myanmar, with a low EPI of 49% and a very high 8.4% loss of mangroves over those 12 years.  On the other hand, the US has a relatively high EPI of 85%, but lost a significant 2.7% of its mangroves.  And there are countries with no recorded loss of mangrove area with EPIs ranging from 87% (Singapore) to 28% (Somalia).
+
+One explanation might be that the causes of mangrove deforestation are more atmospheric, oceanic and environmental, rather than human-related.
+
+### What about absolute loss?
+
+Let's try one last thing: plotting absolute mangrove area loss rather than percent loss.
+
+```{r}
+g <- ggplot(df, aes(log(-Amount.Lost+0.01),EPI.Score.2016))
+g <- g + geom_point() + geom_smooth(method=lm)
+g
+#qplot(log(-Amount.Lost+0.01), EPI.Score.2016, data=df, geom=c("point", "linear"))
+```
+
+This seems like gibberish: increasing your mangrove deforestation in 2000-2012 will increase your EPI score in 2016! The p-value for the linear coefficient is 0.0183.
+
+```{r, echo=TRUE}
+x <- log(-df$Amount.Lost+0.01)
+y <- df$EPI.Score.2016
+fit <- lm(y~x)
+summary(fit)$coefficients
+```
+
+Next week I'll do a more interesting analysis, where I unpack the single EPI score into the 33 environmental factors of "environmental health" and "ecosystem vitality" that go into its calculation, and see which relate to a country's mangrove loss.
+
+---
+
+
+
