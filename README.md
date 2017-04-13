@@ -8,7 +8,7 @@ Continuing the analysis from Week 10, we look for a correlation between a countr
 
 See folder for data files and R Markdown report with all code, or read the report at:
 
-https://lukewolcott.github.io/InTheResistance/Week11/MangroveLossEPI.html
+<https://lukewolcott.github.io/InTheResistance/Week11/MangroveLossEPI.html>
 
 
 ## Week 10
