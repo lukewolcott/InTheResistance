@@ -11,6 +11,7 @@ See folder for data files and R Markdown report with all code, or read the repor
 
 https://lukewolcott.github.io/InTheResistance/Week12/MangroveLossEnvirHealth.html
 
+TAGS: multiple linear regression
 
 ## Week 11
 
@@ -20,6 +21,7 @@ See folder for data files and R Markdown report with all code, or read the repor
 
 <https://lukewolcott.github.io/InTheResistance/Week11/MangroveLossEPI.html>
 
+TAGS: ggplot, plotly, linear regression
 
 ## Week 10
 
@@ -29,6 +31,8 @@ See folder for data files and R markdown report with all code, or read the repor
 
 https://lukewolcott.github.io/InTheResistance/Week10/MangroveLoss.html
 
+TAGS: ggplot, plotly
+
 ## Week 9
 
 Clusters Chicago's 77 "Community Areas" using city data on 21 health factors, and then compares these clusters using economic data on per capita income, unemployment, etc.  Includes a bit of topological data analysis for finding the right number of clusters.
@@ -36,6 +40,8 @@ Clusters Chicago's 77 "Community Areas" using city data on 21 health factors, an
 See folder for data file and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week9/ClusteringChicago.html
+
+TAGS: machine learning, ggplot, plotly
 
 ## Week 8
 
@@ -45,6 +51,8 @@ See folder for data file and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week8/ArtGrants.html
 
+TAGS: plotly
+
 ## Week 7
 
 This week is whimsical: using a dataset off the 500 largest Indian cities, I build machine learning algorithms that predict with 84% accuracy that the average large Indian city is in the Central region of the country.
@@ -52,6 +60,8 @@ This week is whimsical: using a dataset off the 500 largest Indian cities, I bui
 See folder for data files and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week7/predict_region.html
+
+TAGS: machine learning
 
 ## Week 6
 
@@ -61,6 +71,8 @@ See folder for data and Shiny files.  The app is available at:
 
 https://lukewolcott.shinyapps.io/InTheResistance_Week06/
 
+TAGS: ggplot, Shiny
+
 ## Week 5
 
 Looks at immigration enforcement -- apprehensions, removals, and forced returns -- by US immigration offices from 1925-2015.
@@ -68,6 +80,8 @@ Looks at immigration enforcement -- apprehensions, removals, and forced returns 
 See folder for data files and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week5/ImmigrationEnforcementOverTime.html
+
+TAGS: ggplot
 
 ## Week 4
 
@@ -77,6 +91,8 @@ See folder for data files and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week4/H1BVisaEmployersComparison.html
 
+TAGS: hypothesis testing
+
 ## Week 3
 
 Calculates the percentage of H1-B visa applications affected by the proposed law HR-670, which would raise the wage exemption level for "H1-B Dependent" employers from $60,000 to $130,000.
@@ -84,6 +100,8 @@ Calculates the percentage of H1-B visa applications affected by the proposed law
 See folder for data files and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week3/H1BVisaCutoffIncrease.html
+
+TAGS: descriptive statistics
 
 ## Week 2
 
@@ -93,6 +111,8 @@ See folder for data files and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week2/WomensMarchByState.html
 
+TAGS: plotly, linear regression, heatmap
+
 ## Week 1
 
 Looks at relative sizes of US Women's March protests on Jan 21, 2017.  Uses a Python script to scrape a Wikipedia site and extract population data.
@@ -100,3 +120,5 @@ Looks at relative sizes of US Women's March protests on Jan 21, 2017.  Uses a Py
 See folder for data files and R markdown report, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week1/WomensMarchCrowds.html
+
+TAGS: Python, webscrape, leaflet
