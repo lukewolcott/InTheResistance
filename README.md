@@ -2,6 +2,16 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+
+## Week 12
+
+In a third week with mangrove forest data, we use multiple linear regression to find which environmental health indicators correlate with a country's mangrove deforestation.
+
+See folder for data files and R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week12/MangroveLossEnvirHealth.html
+
+
 ## Week 11
 
 Continuing the analysis from Week 10, we look for a correlation between a country's mangrove deforestation and its Environmental Performance Index.
