@@ -1,0 +1,155 @@
+---
+title: "Mangrove Loss and Environmental Health"
+author: "Luke Wolcott"
+date: "April 10, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+
+Continuing from the last two weeks, I'm looking at the change in mangrove forest area between 2000-2012, as an indication of the health of these forests and the level of environmental stewardship of the corresponding country.
+
+Mangrove data from [here](http://faculty.salisbury.edu/~sehamilton/mangroves/); environmental health/vitality data from the Environmental Performance Index project [here](http://epi.yale.edu/downloads) (metadata PDF [here](http://epi.yale.edu/sites/default/files/Yale%20EPI%20Metadata_2016.pdf)).  See my last two week's reports for more background.
+
+The specific question is: **Which evironmental factors correlate with changes in mangrove forest health?** The answer, as we'll see, may be "Access to Sanitation" and "Fish Stocks".
+
+
+```{r}
+library(dplyr)
+mangrove <- read.csv("MFWcleaned.csv", stringsAsFactors = FALSE)
+codes <- read.csv("ISOCodesAndCountryNameMatched.csv", stringsAsFactors = FALSE, na.strings = ".")
+env_indicators <- read.csv("2016_epi_framework_indicator_scores_friendliest.csv", stringsAsFactors = FALSE)
+
+# drop St. Kitts and Nevis because it's bad data
+mangrove <- mangrove[-91,]
+# drop Qatar, Saint Barthelemy, and Mauritania because no mangroves
+mangrove <- mangrove[-c(102:104),]
+
+# add a column to mangrove for percent change
+mangrove$Percent.Change.in.Mangrove.Forest <- (mangrove$X2012 - mangrove$X2000)/mangrove$X2000*100
+
+# only want percent change column
+mangrove <- mangrove[,c(1,2,16)]
+
+# use left join to add on ISO Alpha-3 code
+indicators_w_code <- left_join(env_indicators,codes,by=c("Country"="CountryName"))
+indicators_w_code <- indicators_w_code[,-c(1,40,41)]
+
+df <- left_join(mangrove,indicators_w_code,by=c("ISO_3_Num"="NumericCode"))
+```
+
+### Merging the tables
+
+We have good mangrove data on 102 countries, but the following 16 of them are not listed in the EPI table, so we need to omit them.
+
+```{r}
+df$Country.Name[is.na(df$Environmental.Health)]
+```
+
+```{r}
+# only want countries that have mangrove data and indicator data
+df <- inner_join(mangrove,indicators_w_code,by=c("ISO_3_Num"="NumericCode"))
+df <- df[,-2]
+```
+
+### Environmental indicators
+
+For the remaining 86 countries, the EPI table gives 37 different indicators of "environmental health" and "ecosystem vitality". 
+
+Several of them are simply weighted combinations of others, so we can throw these out. 
+
+```{r}
+df <- df[ , -c(6:16)]
+```
+
+Next we need to deal with missing values.  The 10 NAs for Nitrogen.Balance and Nitrogen.Use.Efficiency are, according to the metadata, for ten countries that have minimal agricultural output.  We'll fill these in with the mean values.
+
+```{r}
+df[is.na(df$Nitrogen.Use.Efficiency), 18] <- mean(df$Nitrogen.Use.Efficiency, na.rm=T)
+
+df[is.na(df$Nitrogen.Balance), 19] <- mean(df$Nitrogen.Balance,na.rm=T)
+```
+
+```{r}
+#The Democratic Republic of Congo has a very small coastline relative to land size, and has NAs for Fish.Stocks and Marine.Protected.Areas.  
+df[44,21] <- mean(df$Fish.Stocks, na.rm=T)
+df[44,24] <- mean(df$Marine.Protected.Areas, na.rm=T)
+
+# based on imputation from metadata PDF
+df[df$Country == "Dominican Republic",28]<- 100
+
+# countries with less than 200 km^2 of tree cover weren't given a score for Tree.Cover.Loss.  I'll give them a score of zero (meaning zero loss from 2000 levels). I might try taking this column out later.
+df[is.na(df$Tree.Cover.Loss), 20] <- 0
+```
+
+Since 25 out of the 86 rows have NAs for Trend.in.Carbon.Intensity, I don't know how to impute values and I'm going to remove this column.  In the end, here are our column names.
+
+```{r}
+df <- df[,-27]
+names(df)
+```
+
+### Linear regression
+
+Let's use the environmental indicators (columns 4-28) to fit for the values of `Percent.Change.in.Mangrove.Forest`.
+
+```{r}
+fit <- lm(Percent.Change.in.Mangrove.Forest ~ . - ISO_3_Num - Country, data = df)
+#summary(fit)$coefficients
+```
+
+The only variables with significant p-values are `Air.Pollution...Average.PM2.5.Exceedance` (p-value 0.0212) and `Air.Pollution...Average.Exposure.to.NO2` (p-value 0.0676).  The first is a measure of how often the PM2.5 particulate matter was above certain human health targets.  The second measures levels of nitrogen dioxide, another type of air pollution.  While I find this analysis disappointing, perhaps it indicates that mangroves are more sensitive to air quality than to other environmental health indicators.
+
+### Removing outliers
+
+Or, we can take the position that our model has some issues and we need to remove some outliers.  Here are the countries with the highest leverage based on `dffits`, which measures the change in the predicted response if we remove that country.  I also display their actual Percent.Change.in.Mangrove.
+
+```{r}
+x <- order(abs(dffits(fit)),decreasing=T)
+Country <- df$Country[x[1:6]]
+dffits <- round(dffits(fit)[x[1:6]],digits=3)
+MangChange <- round(df$Percent.Change.in.Mangrove.Forest[x[1:6]],digits=3)
+as.data.frame(rbind(Country,dffits,MangChange))
+```
+
+The function `cooks.distance` calculates the overall change in regression coefficients when a country is omitted from the calculation.  Here are the countries with the largest `cooks.distance`.
+
+```{r}
+x <- order(cooks.distance(fit), decreasing=T)
+Country <- df$Country[x[1:6]]
+CooksDist <- round(cooks.distance(fit)[x[1:6]],digits=9)
+as.data.frame(rbind(Country, CooksDist))
+
+```
+
+**Since the mean for mangrove change is -1.035%, we start to get the picture that the four countries Myanmar, Guatemala, Taiwan, and Malaysia are outliers.**  This is also confirmed by looking at the diagnostic plots from `plot(fit)`.
+
+```{r}
+par(mfrow = c(2,2))
+plot(fit)
+```
+
+Let's take out Myanmar, Guatemala, Taiwan, and Malaysia, and redo the regression.  Here are the coefficients and their p-values.
+
+```{r}
+df_short <- df[-c(7,37,73,3),]
+fit2 <- lm(Percent.Change.in.Mangrove.Forest ~ . - ISO_3_Num - Country, data = df_short)
+summary(fit2)$coefficients[,c(1,4)]
+```
+
+### Fish Stocks, and Access to Sanitation, Matter
+
+The variable `Air.Pollution...Average.Exposure.to.NO2` is still somewhat significant, with p-value `0.0559`.
+
+But now we have two clearly significant variables.  The p-value for `Access.to.Sanitation` is `0.0254`, and the p-value for `Fish.Stocks` is `0.0266`.
+
+The `Access.to.Sanitation` variable measures the percentage of the population that has access to "improved" sanitation, which "hygienically separates human excreta from human contact and is not public or shared, only private".  Furthermore, the coefficient is relatively large at `0.03`.  So increasing your population's access to sanitation by one percentage point is likely to increase your mangrove forest area by 0.03% over twelve years, all other things being held constant.
+
+The `Fish.Stock` variable measures "the fraction of fish stocks overexploited and collapsed by exclusive economic zone".  The goal is to have this down to zero.  But the coefficient in my regression is `0.0188`, which means increasing the amount of overexploited fish by 1% is likely to correspond to a 0.0188% increase in your mangrove forests.  I would naively expect this coefficient to be negative, so maybe there are confounding variables related to how this variable is measured for each country...?
+
+
+---
+
