@@ -2,6 +2,16 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 13
+
+I look at Pew Research Center data on religion in the US.  After binning respondents into six categories -- Christian, Muslim, Jewish, Buddhist, Other, and None -- I look at their views on homosexuality, spiritual experience, and the role of religion in society.
+
+See folder for data files and R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week13/ReligiousViews.html
+
+TAGS: ggplot
+
 
 ## Week 12
 
