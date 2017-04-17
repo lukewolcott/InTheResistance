@@ -1,0 +1,167 @@
+---
+title: "Some US religious data"
+author: "Luke Wolcott"
+date: "April 16, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+Because it is Easter, I found an interesting dataset from a survey conducted by the Pew Research Center.  The ["Pew Research Center 2014 U.S. Religious Landscape Study"](http://www.pewforum.org/datasets/), released 12/1/2016, is a telephone survey that was conducted June - September 2014[^1].  
+
+My broad question is: **How were responses different between Christians and other denominations or non-religious people?**
+
+The data file and codebook are included in the Github repo folder corresponding to this short report.  The survey is very granular when asking about someone's religion, the religion they were raised with, and any spouse's religion.  I've created columns that bin these responses into six categories: Christian, Muslim, Jewish, Buddhist, Other, and None (which includes atheist and agnostic).  
+
+For example, here is the breakdown of percentages of the respondent's reported religion.
+
+```{r, cache=TRUE}
+library(foreign)
+data <- read.spss("Dataset - Pew Research Center 2014 Religious Landscape Study National Telephone Survey - Version 1.1 - December 1 2016.sav", to.data.frame = TRUE)
+
+# subset for columns of interest
+data <- data[,c(1,6,29,36,41,74,77,89,102:105,131,162,172:178,180,186,189,191,198,199)]
+```
+
+```{r}
+christian_denoms <- c("Evangelical Protestant Tradition", "Mainline Protestant Tradition", "Historically Black Protestant Tradition", "Catholic", "Mormon", "Orthodox Christian", "Jehovah's Witness", "Other Christian")
+other_denoms <- c("Hindu", "Other World Religions", "Other Faiths", "Don't know/refused - no information on religious identity")
+
+data$RELTRAD6 <- as.character(data$RELTRAD)
+data$RELTRAD6[data$RELTRAD6 %in% christian_denoms] <- "Christian"
+data$RELTRAD6[data$RELTRAD6 %in% other_denoms] <- "Other"
+data$RELTRAD6[data$RELTRAD6 == "Unaffiliated (religious \"nones\")"] <- "None"
+data$RELTRAD6 <- as.factor(data$RELTRAD6)
+
+round(table(data$RELTRAD6)/35071*100, digits=2)
+```
+
+
+### Religion versus raised religion
+
+```{r}
+data$CHRELTRAD6 <- as.character(data$CHRELTRAD)
+data$CHRELTRAD6[data$CHRELTRAD6 %in% christian_denoms] <- "Christian"
+data$CHRELTRAD6[data$CHRELTRAD6 %in% other_denoms] <- "Other"
+data$CHRELTRAD6[data$CHRELTRAD6 == "Unaffiliated (religious \"nones\")"] <- "None"
+data$CHRELTRAD6 <- as.factor(data$CHRELTRAD6)
+
+data$SPRELTRAD6 <- as.character(data$SPRELTRAD)
+data$SPRELTRAD6[data$SPRELTRAD6 %in% christian_denoms] <- "Christian"
+data$SPRELTRAD6[data$SPRELTRAD6 %in% other_denoms] <- "Other"
+data$SPRELTRAD6[data$SPRELTRAD6 == "Unaffiliated (religious \"nones\")"] <- "None"
+data$SPRELTRAD6 <- as.factor(data$SPRELTRAD6)
+```
+
+Besides asking what your religion is, the survey asks in what religious tradition you were raised.  This table compares the two; the columns correspond to raised religion, and the rows to current religion.  For example, it shows that 28 respondents raised Buddhist now consider themselves Christian, and 52 raised Buddhists now consider themselves None.
+
+Unfortunately, I can't figure out how to include weights in this table, so it is just raw counts from the 35,071 respondents and may exhibit sample bias.
+
+```{r}
+table(data$RELTRAD6, data$CHRELTRAD6)
+```
+
+### Religion versus spouse religion
+
+For the subset of 19,955 respondents who reported having a spouse or partner, here is the same table (also with sample bias) relating the religion of the spouse/partner (column) to that of the respondent.  So there were two Jewish people with a Muslim spouse/partner, and one Muslim with a Jewish spouse/partner.
+
+```{r}
+table(data$RELTRAD6, data$SPRELTRAD6)
+```
+
+### Views on homosexuality
+
+There were three questions about homosexuality, and I wanted to see what the differences were among the 6 types of religion that I've binned everyone into.  This and the remaining analyses have been weighted using the WEIGHT column, to remove sample bias.
+
+The first question (Q.B2a) was: *Now I'm going to read you a pair of statements.  Tell me whether the first statement or the second statement comes closer to your to your own views.  (1) Homosexuality should be accepted by society. (2) Homosexuality should be discouraged by society.*
+
+```{r}
+library(ggplot2)
+g <- ggplot(data=data, aes(RELTRAD6, weight=WEIGHT))+ coord_flip() + theme_minimal()
+g + geom_bar(aes(fill=qb2b), position="fill") 
+```
+
+The second question (Q.B22) was: *Do you strongly favor, favor, oppose, or strongly oppose allowing gays and lesbians to marry legally?*  Keep in mind this survey was conducted in the summer of 2014, when marriage equality was a prominent national issue but hadn't been made legal by the Supreme Court yet.
+
+```{r}
+g + geom_bar(aes(fill=qb22), position="fill") 
+```
+
+The third question referencing the LGBT community -- well, actually just the LG community -- was Q.P99: *Do you personally know anyone who is gay or lesbian, or not?*
+
+```{r}
+g + geom_bar(aes(fill=qp99), position="fill") 
+```
+
+
+### Spiritual experience
+
+Different people get different things out of religion.  One question (Q.I4) asked about the frequency of different religious/spiritual experiences.  It asked: *How often do you...*
+
+*a. ...feel a deep sense of spiritual peace and well-being?*
+```{r} 
+g + geom_bar(aes(fill=qi4a), position="fill") 
+```
+
+*b. ...feel a deep sense of wonder about the universe?*
+```{r} 
+g + geom_bar(aes(fill=qi4b), position="fill") 
+```
+
+*c. ...feel a strong sense of gratitude or thankfulness?*
+```{r} 
+g + geom_bar(aes(fill=qi4c), position="fill") 
+```
+
+*d. ...think about the meaning and purpose of life?*
+```{r} 
+g + geom_bar(aes(fill=qi4d), position="fill") 
+```
+
+### Role of religion in society
+
+Since this is so easy to do and interesting, I'll show the responses to some more questions.  Here was a question (Q.M5) about the role of religion in society.  It read: *As I read a short list of statements about churches and other religious organizations, please tell me if you agree or disagree with each one. Churches and other religious organizations...*
+
+*a. ...focus too much on rules.*
+
+```{r}
+g + geom_bar(aes(fill=qm5a), position="fill") 
+```
+
+*b. ...are too concerned with money and power.*
+
+```{r}
+g + geom_bar(aes(fill=qm5b), position="fill") 
+```
+
+*d. ...are too involved with politics.*
+
+```{r}
+g + geom_bar(aes(fill=qm5d), position="fill") 
+```
+
+*e. ...protect and strengthen morality in society.*
+
+```{r}
+g + geom_bar(aes(fill=qm5e), position="fill") 
+```
+
+*f. ...bring people together and strengthen community bonds.*
+
+```{r}
+g + geom_bar(aes(fill=qm5f), position="fill") 
+```
+
+*g. ...play an important role in helping the poor and needy.*
+
+```{r}
+g + geom_bar(aes(fill=qm5g), position="fill") 
+```
+
+Perhaps next week I'll do a logistic regression on some of these survey responses, to see if I can predict someone's religious affiliation based on their responses to such questions.
+
+[^1]: Pew Research Center bears no responsibility for the interpretations presented or conclusions reached based on analysis of the data.
+
+---
