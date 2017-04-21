@@ -51,7 +51,7 @@ See folder for data file and R markdown report with all code used, or read at:
 
 https://lukewolcott.github.io/InTheResistance/Week9/ClusteringChicago.html
 
-TAGS: machine learning, ggplot, plotly
+TAGS: machine learning, ggplot, plotly, topological data analysis
 
 ## Week 8
 
