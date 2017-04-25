@@ -1,0 +1,186 @@
+---
+title: "Predicting Religion"
+author: "Luke Wolcott"
+date: "April 24, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+### Intro
+
+[Last week](https://lukewolcott.github.io/InTheResistance/Week13/ReligiousViews.html) I looked at the ["Pew Research Center 2014 U.S. Religious Landscape Study"](http://www.pewforum.org/datasets/)[^1], and presented some interesting aspects of the survey responses. This week I want to see if I can use survey responses to predict a respondent's religion.  That's right, a predictive religious test!
+
+I make a logistic regression model that predicts Christian/non-Christian status with 89% accuracy.  A random forest model doesn't do any better.  I put this model into a Shiny app, so you can see what it predicts for you:
+
+<https://lukewolcott.shinyapps.io/InTheResistance_Week14/>
+
+Then I try to predict religious affiliation out of six categories: Christian, Muslim, Jewish, Buddhist, Other, None.  For this I use a multinomial logistic regression.  As you'll see below, it is 85% accurate.  This is not very good, as you can see from the confusion matrix.  A "null prediction" of "Christian" would be right 71% of the time, since that is the percentage of Christians in the dataset.  I tried a random forest model as well for the 6-way prediction, and it had basically the same performance.
+
+
+
+```{r, cache=TRUE}
+library(foreign)
+data <- read.spss("Dataset - Pew Research Center 2014 Religious Landscape Study National Telephone Survey - Version 1.1 - December 1 2016.sav", to.data.frame = TRUE)
+
+# subset for columns of interest
+#data <- data[,c(29,74,77,102:105,131,172:178,180,186,189,191,198)]
+
+# getting rid of column 77, qf2, "How important is religion in your life"? because it seems like cheating.
+data <- data[,c(29,74,102:105,131,172:178,180,186,189,191,198)]
+```
+
+
+### Feature engineering
+
+I want to choose survey questions that don't directly ask about a person's religion.  For example, here are some that I'll include.
+
+Q.A1: *Generally, how would you say things are these days in your life – would you say that you are very happy, pretty happy, or not too happy?*
+
+Q.I4: *Now, thinking about some different kinds of experiences, how often do you feel a deep sense of spiritual peace and well-being?... feel a deep sense of wonder about the universe?... feel a strong sense of gratitude or thankfulness?... think about the meaning and purpose of life?*
+
+Q.M5: *As I read a short list of statements about churches and other religious organizations, please tell me if you agree or disagree with each one. First, churches and other religious organizations focus too much on rules?... Play an important role in helping the poor and needy?... Are too involved with politics?... Protect and strengthen morality in society?... Are too concerned with money and power?... Bring people together and strengthen community bonds?*
+
+There are three questions that ask about views on homosexuality, but since the survey was taken in 2014 I'm worried (hoping, really) that views have changed, and this will not be relevant in 2017.
+
+We also have various demographic questions -- about highest level of education, family income, political affiliation, etc. -- that will be good to include.
+
+The RELTRAD variable bins the respondents' religions into 16 broad categories (including a 'None').  But I'm going to bin these further into a variable RELTRAD6 with only six: Christian, Muslim, Jewish, Buddhist, Other, and None.  Also, I'll create a variable CHRISTIAN that bins everyone as self-reporting as either Christian or not.
+
+The survey asks about the religion (if any) of the respondent, and also the religion (if any) they were raised with.  I'm going to create a variable KEPTREL that keeps track of whether or not the person kept the religion they were raised with (using the six bins, not the 16).
+
+Look at the .Rmd file to see all the code for this.
+
+```{r}
+christian_denoms <- c("Evangelical Protestant Tradition", "Mainline Protestant Tradition", "Historically Black Protestant Tradition", "Catholic", "Mormon", "Orthodox Christian", "Jehovah's Witness", "Other Christian")
+other_denoms <- c("Hindu", "Other World Religions", "Other Faiths", "Don't know/refused - no information on religious identity")
+
+# 6 bins for respondent religion
+data$RELTRAD6 <- as.character(data$RELTRAD)
+data$RELTRAD6[data$RELTRAD6 %in% christian_denoms] <- "Christian"
+data$RELTRAD6[data$RELTRAD6 %in% other_denoms] <- "Other"
+data$RELTRAD6[data$RELTRAD6 == "Unaffiliated (religious \"nones\")"] <- "None"
+data$RELTRAD6 <- as.factor(data$RELTRAD6)
+
+# 6 bins for childhood religion
+data$CHRELTRAD6 <- as.character(data$CHRELTRAD)
+data$CHRELTRAD6[data$CHRELTRAD6 %in% christian_denoms] <- "Christian"
+data$CHRELTRAD6[data$CHRELTRAD6 %in% other_denoms] <- "Other"
+data$CHRELTRAD6[data$CHRELTRAD6 == "Unaffiliated (religious \"nones\")"] <- "None"
+data$CHRELTRAD6 <- as.factor(data$CHRELTRAD6)
+
+# variable to detect if religion changed from childhood religion
+data$KEPTREL <- (data$RELTRAD6 == data$CHRELTRAD6)
+
+# first line if including column 77, qf2; second line if excluding
+#data <- data[,-c(2,8,22)]
+data <- data[,-c(2,7,21)]
+
+
+```
+
+
+```{r}
+dataC <- data
+dataC$CHRISTIAN <- as.character(dataC$RELTRAD6)
+dataC$CHRISTIAN[dataC$CHRISTIAN != "Christian"] <- "non-Christian"
+dataC$CHRISTIAN <- as.factor(dataC$CHRISTIAN)
+
+# throw out previous output RELTRAD6
+# first line if including column 77, qf2; second line if excluding
+#dataC <- dataC[,-19]
+dataC <- dataC[,-18]
+
+# running contrasts(dataC$CHRISTIAN) shows that
+# R is coding Christian as 0 and non-Christian as 1
+```
+
+In case you're curious, in the 35,071 survey responses here is the percentage breakdown of Christian and non-Christian.
+```{r}
+round(table(dataC$CHRISTIAN)/nrow(dataC)*100, digits=2)
+```
+
+
+### Christian/non-Christian logistic regression model
+
+First we split the 35071 x 20 dataset into a training and test set.
+
+```{r}
+set.seed(134)
+p <- 0.8
+inTrain <- sample(1:nrow(data), nrow(data)*p)
+training <- data[inTrain,]
+test <- data[-inTrain,]
+trainingC <- dataC[inTrain,]
+testC <- dataC[-inTrain,]
+```
+
+Then we build the model using logistic regression.
+
+```{r}
+#fit <- glm(RELTRAD6 ~ ., family = binomial,data=training)
+fitC <- glm(CHRISTIAN ~ ., family = binomial,data=trainingC)
+```
+
+For starters, here's the anova table.  The GitHub repo for this report has the codebook that explains what these questions are, if you can't tell from what I said above.
+
+```{r}
+#anova(fit, test="Chisq")
+anova(fitC, test="Chisq")
+```
+
+Pretty much all the questions are significant.  Question qmf5 asks if you agree or disagree that churches and other religious organizations "bring people together and strengthen community bonds".  As we saw last week, people agreed with this across the board for the most part.
+
+Since there is still residual deviance, I could certainly include more of the 100 questions asked.  But I'm keeping it to this small set of questions because I like them.
+
+We can check how the model predicts on the test dataset.
+
+```{r}
+library(caret)
+predC <- predict(fitC, testC, type='response')
+predCbinary <- as.factor(ifelse(predC > 0.5, 1,0))
+levels(predCbinary) <- c("Christian", "non-Christian")
+confusionMatrix(predCbinary, testC$CHRISTIAN)
+```
+
+So I have a model that can predict, with 89% accuracy, whether or not you are a Christian, from answers you give to survey questions that don't directly ask about your religion!
+
+Certainly, this needs to be made into a Shiny app so anyone can answer the questions and see what the model predicts.  Here it is:
+
+<https://lukewolcott.shinyapps.io/InTheResistance_Week14/>
+
+### Random forest algorithm to predict Christian/non-Christian
+
+I tried a random forest model, but it didn't perform any better.
+
+```{r, cache=TRUE}
+library(randomForest)
+rf_fitC <- randomForest(CHRISTIAN ~ ., data = trainingC)
+rf_predC <- predict(rf_fitC, testC, type='response')
+confusionMatrix(rf_predC, testC$CHRISTIAN)
+
+```
+
+### Multinomial logistic regression
+
+We can go back to the RELTRAD6 variable, with 6 bins for religious affiliation, and fit it with a multinomial logistic regression.
+
+```{r, cache=TRUE}
+library(nnet)
+fit <- multinom(RELTRAD6 ~ ., data = training)
+pred <- predict(fit, test)
+confusionMatrix(pred, test$RELTRAD6)
+```
+
+Finally, we could try a random forest algorithm to predict RELTRAD6.  Sadly, it doesn't do any better.
+
+```{r, cache=TRUE}
+rf_fit <- randomForest(RELTRAD6 ~ ., data = training)
+rf_pred <- predict(rf_fit, test, type='response')
+confusionMatrix(rf_pred, test$RELTRAD6)
+```
+
+[^1]: Pew Research Center bears no responsibility for the interpretations presented or conclusions reached based on analysis of the data.
+
