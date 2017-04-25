@@ -2,6 +2,20 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 14
+
+Using the Pew Research Center data on religion in the US, as in last week, I construct a logistic regression model that predicts with 89% accuracy whether or not you are Christian.  This was mostly for fun, to see how accurate I could get it.  I also made a Shiny app so you can answer the survey questions and see what the algorithm predicts for you.
+
+See folder for data files and R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week14/PredictReligion.html
+
+Shiny app available at:
+
+https://lukewolcott.shinyapps.io/InTheResistance_Week14/
+
+TAGS: logistic regression, multinomial logistic regression, random forests, Shiny
+
 ## Week 13
 
 I look at Pew Research Center data on religion in the US.  After binning respondents into six categories -- Christian, Muslim, Jewish, Buddhist, Other, and None -- I look at their views on homosexuality, spiritual experience, and the role of religion in society.
