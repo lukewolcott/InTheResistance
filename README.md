@@ -2,6 +2,15 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 15
+
+Looking at recent state-level data on India's male alcohol consumption and women's empowerment, I find a positive correlation.
+
+See folder for data files and R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week15/IndiaAlcoholWomenEmpowerment.html
+
+
 ## Week 14
 
 Using the Pew Research Center data on religion in the US, as in last week, I construct a logistic regression model that predicts with 89% accuracy whether or not you are Christian.  This was mostly for fun, to see how accurate I could get it.  I also made a Shiny app so you can answer the survey questions and see what the algorithm predicts for you.
