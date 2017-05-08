@@ -1,0 +1,71 @@
+---
+title: "India’s Alcohol Consumption and Women Empowerment"
+author: "Luke Wolcott"
+date: "May 6, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+A mid-April [New York Times article](https://www.nytimes.com/2017/04/15/world/asia/india-bihar-alcohol-ban-women.html?_r=0) describes how the Indian state of Bihar recently enacted a prohibition law, with positive results.  Most interestingly, the driving force was organized activism by village women.
+
+Separately, India's 4th National Family Health Survey was recently completed (2015-2016, 700k respondents) and the data made available by the [DHS (Demographic and Health Surveys) Program](http://rchiips.org/nfhs/data1.shtml).
+
+There's a summary of the NFHS's India-wide findings here:
+
+http://rchiips.org/nfhs/pdf/NFHS4/India.pdf
+
+This survey asks many family health questions, including asking what percentage of men and women consume alcohol.  Nationally, 29.2% of men, and 1.2% of women, report consuming alcohol.
+
+It asks 8 questions related to women's empowerment.  Using this, the Hindustan Times (HT) created a "Women Empowerment Index" and [ranked each state and union territory](https://github.com/HindustanTimesLabs/women-empowerment-index).
+
+My question: **Is there a relationship between the amount of male alcohol consumption, and the HT's Women Empowerment Index?**  
+
+Does Bihar stand out, in terms of alcohol and women's empowerment, or might other states follow suit?  
+
+### Dataset
+
+The NFHS data [was released](http://rchiips.org/nfhs/pdf/NFHS4/India.pdf
+) in a few dozen different PDF files.  I manually scraped the male and female alcohol consumption data, and combined it with the HT's Women Empowerment Index.  I also added a factor variable indicating each state or union territory's region within India.  This CSV file is in the Github repo corresponding to this report.
+
+### Male Alcohol Consumption versus Women Empowerment
+
+```{r}
+data <- read.csv("SomeStateDataWithRegions.csv")
+library(plotly)
+```
+
+
+```{r}
+plot_ly(data, x=~HTWomenEmpowermentIndex, y=~MaleAlcoholConsumption, mode="markers", text=~State)
+```
+
+This plotly graph shows that there is a positive correlation between male alcohol consumption and women's empowerment.  The state of Bihar, where women organized to make alcohol illegal, actually has the lowest empowerment index (0.14) of any state!
+
+The correlation coefficient is ```r cor(data$HTWomenEmpowermentIndex, data$MaleAlcoholConsumption)```.  A linear fit gives the following coefficients and p-values.
+
+
+```{r}
+fit <- lm(MaleAlcoholConsumption ~ HTWomenEmpowermentIndex, data=data)
+summary(fit)$coefficients
+
+```
+
+### Different regions in India
+
+Here's the same plot, but colored by the region of India.
+
+```{r}
+library(ggplot2)
+g <- ggplot(data=data, aes(HTWomenEmpowermentIndex, MaleAlcoholConsumption, col=Region))
+g + geom_point()
+
+```
+
+Besides noticing that the northeast states/UTs have lots of drinking, I don't see any significant trends.
+
+---
+
+
