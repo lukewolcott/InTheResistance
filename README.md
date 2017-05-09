@@ -10,6 +10,7 @@ See folder for data files and R Markdown report with all code, or read the repor
 
 https://lukewolcott.github.io/InTheResistance/Week15/IndiaAlcoholWomenEmpowerment.html
 
+TAGS: ggplot, plotly
 
 ## Week 14
 
