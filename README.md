@@ -2,6 +2,16 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 18
+
+After a few weeks off to deal with end-of-semester grading, I look at some simple descriptive statistics about US college degrees awarded in math and statistics, in computer science, in environment-related areas, and in outdoor recreation-related areas.  The data comes from the US Dept of Education's College Scorecard.
+
+See folder for data files and R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week18/CollegeStats.html
+
+TAGS: descriptive statistics
+
 ## Week 15
 
 Looking at recent state-level data on India's male alcohol consumption and women's empowerment, I find a positive correlation.
