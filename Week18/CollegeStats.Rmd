@@ -1,0 +1,173 @@
+---
+title: "Growth of math majors in US colleges, 2000 to 2014"
+author: "Luke Wolcott"
+date: "May 22, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+The [College Scorecard](https://collegescorecard.ed.gov/data/), put out by the US Department of Education, is the definitive source for statistics on US colleges and universities.  As a math professor I often heard that more and more students were majoring in math and computer science.  And yet, personally I often felt that the most important and useful majors were related to environmental science and conservation.  
+
+The question for this week is: **Between the 2000-2001 and 2014-2015 academic years, how did enrollment in math-related majors change versus environment-related majors?**
+
+```{r, cache=TRUE}
+library(dplyr)
+y2014 <- read.csv("MERGED2014_15_PP.csv")
+y2000 <- read.csv("MERGED2000_01_PP.csv")
+```
+
+The GitHub repo for this report has the College Scorecard data for the 2000-2001 and 2014-2015 academic years.  In 2000 there were 6478 schools measured, and in 2014 there were 7703.  The repo also has a data dictionary that explains all the 1743 variables that were measured.
+
+## Math-related majors and ecology-related majors
+
+
+```{r}
+library(dplyr)
+# OPEID is "8-digit OPE ID for institution"
+# PCIP27 is "percentage of degrees awarded in Mathematics and Statistics"
+# PCIP11 is "percentage of degrees awarded in Computer and Information Sciences and Support Services"
+# PCIP01 is "percentage of degrees awarded in Agriculture, Agricultural Operations, and Related Sciences"
+# PCIP03 is "percentage of degrees awarded in Natural Resources and Conservation"
+# PCIP31 ia "percentage of degrees awarded in Parks, Recreation, Leisure, and Fitness Studies"
+d14 <- select(y2014,INSTNM, UNITID,  PCIP27,PCIP11, PCIP31, PCIP03, PCIP01)
+
+d00 <- select(y2000,  UNITID,  PCIP27,PCIP11, PCIP31, PCIP03, PCIP01)
+
+names(d14) <- c( "NAME","UNITID", "PCIP27_2014", "PCIP11_2014", "PCIP31_2014", "PCIP03_2014", "PCIP01_2014")
+
+names(d00) <- c( "UNITID", "PCIP27_2000", "PCIP11_2000", "PCIP31_2000", "PCIP03_2000", "PCIP01_2000")
+
+# subset for schools that appear in both datasets, join them
+d <- inner_join(d14, d00, by="UNITID")
+
+# convert all columns to numeric
+for (i in 3:ncol(d))
+      d[,i] <- as.numeric(as.character(d[,i]))*100
+
+```
+
+For each school that has data for 2000-2001 and 2014-2015, we want to look at those years' percentages of degrees awarded in various areas.  For this purpose, we have the following variables from the Scorecard.
+
+| Variable | Percentage of degrees awarded in... |
+|:---------|:------------------------------------|
+| PCIP27   | Mathematics and Statistics          |
+| PCIP11   | Computer and Information Sciences and Support Services |
+| PCIP03 | Natural Resources and Conservation |
+| PCIP31 | Parks, Recreation, Leisure, and Fitness Studies |
+
+In the following sections, I'll look at each of these academic areas and how their stats have changed from 2000 to 2014.
+
+---
+
+### PCIP27: Math and statistics degrees 
+
+Of the `r dim(d)[1]` schools for which we have 2000 and 2014 data, there are `r sum(d$PCIP27_2000 == 0, na.rm=TRUE)` with a zero percentage of math and statistics degrees awarded in 2000.  So there is probably no math or statistics program at these schools.  For the 2014 academic year, there are `r sum(d$PCIP27_2014 == 0, na.rm=TRUE)` schools with zero percentage.  We might infer that 81 schools started math/statistics degree programs between 2000 and 2014.
+
+For those 1525 schools in 2000-2001 that had a non-zero percentage of degrees awarded in mathematics and statistics, the summary statistics for this percentage are the following.
+
+```{r}
+summary(d$PCIP27_2000[d$PCIP27_2000>0])
+```
+
+For those 1606 schools in 2014-2015 with a non-zero percentage of math and statistics degrees, we have the following.
+
+```{r}
+summary(d$PCIP27_2014[d$PCIP27_2014>0])
+```
+
+We can create a variable PCIP27_CHANGE that measures the change in the percentage of math and statistics degrees between 2000 and 2014 academic years for each school.  Here are the summary stats and histogram for that variable, removing the schools with no program at all.  
+
+```{r}
+d$PCIP27_CHANGE <- d$PCIP27_2014 - d$PCIP27_2000
+summary(d$PCIP27_CHANGE[d$PCIP27_2014!=0])
+hist(d$PCIP27_CHANGE[d$PCIP27_2014!=0], main = "Change in percentage of degrees awarded in Math and Statistics")
+```
+
+These all indicate that more students are getting degrees in math and statistics.  Here is a list of the schools with the highest increase, as well as their 2000 percentage. 
+
+```{r}
+arrange(d, desc(PCIP27_CHANGE))[1:15, c(1,8,13)]
+```
+
+Some of the increase is driven by the schools that started math/stats programs between 2000 and 2014, but since there are only 81 such schools, the increase is pervasive.
+
+---
+
+### PCIP11: Computer Science degrees
+
+We can do the same analysis for the percentage of degrees awarded in "Computer and Information Sciences and Support Services".
+
+Of the `r dim(d)[1]` schools with data from both years,  `r dim(d)[1] - sum(d$PCIP11_2000 == 0, na.rm=TRUE)` of them had CS programs in 2000-2001, and `r dim(d)[1] - sum(d$PCIP11_2014 == 0, na.rm=TRUE)` had CS programs in 2014-2015 (as judged by a non-zero PCIP11 value).  
+
+The summary statistics for the 2000 and 2014 values, among schools with CS programs, are the following.
+
+```{r, echo=TRUE}
+summary(d$PCIP11_2000[d$PCIP11_2000>0])
+summary(d$PCIP11_2014[d$PCIP11_2014>0])
+```
+
+This is surprising, because my hunch would be that more students are getting computer science-related degrees.  The Scorecard doesn't have any other category that would better fit technology-related degrees than PCIP11, so I don't know why these percentages went down.  This trend is confirmed if we look at each school's change from 2000 to 2014.  The variable PCIP11_CHANGE measures each schools change in percentage of CS-related degrees awarded.  The summary stats and histogram for this variable are the following.
+
+```{r}
+d$PCIP11_CHANGE <- d$PCIP11_2014 - d$PCIP11_2000
+summary(d$PCIP11_CHANGE[d$PCIP11_2014!=0])
+hist(d$PCIP11_CHANGE[d$PCIP11_2014!=0], breaks=20, main = "Change in percentage of degrees awarded in CS-related areas")
+```
+
+It is interesting that some schools report significant decreases, of 30-50%, all the way to 88%.  These may be tech-centered schools that tanked after the dot com bubble burst in the late 1990s.
+
+
+
+---
+
+### PCIP03: Natural Resources and Conservation
+
+Of the `r dim(d)[1]` schools with data from both years,  `r dim(d)[1] - sum(d$PCIP03_2000 == 0, na.rm=TRUE)` of them had "Natural Resources and Conservation" programs in 2000-2001, and `r dim(d)[1] - sum(d$PCIP03_2014 == 0, na.rm=TRUE)` had such programs in 2014-2015 (as judged by a non-zero PCIP03 value).  
+
+The summary statistics for the 2000 and 2014 values, among schools with these programs, are the following.
+
+```{r, echo=TRUE}
+summary(d$PCIP03_2000[d$PCIP03_2000>0])
+summary(d$PCIP03_2014[d$PCIP03_2014>0])
+```
+
+The variable PCIP03_CHANGE measures each schools change in percentage of conservation-related degrees awarded.  The summary stats and histogram for this variable are the following.
+
+```{r}
+d$PCIP03_CHANGE <- d$PCIP03_2014 - d$PCIP03_2000
+summary(d$PCIP03_CHANGE[d$PCIP03_2014!=0 & d$PCIP03_CHANGE > -20])
+hist(d$PCIP03_CHANGE[d$PCIP03_2014!=0 & d$PCIP03_CHANGE > -20], breaks=15,  main = "Change in percentage of degrees awarded in conservation-related areas")
+```
+
+The positive increase is driven by the `r 1069-795` new programs in 2014.  But as a percentage of all degrees awarded, we see above that there are relatively fewer in 2014 than in 2000.
+
+
+---
+
+
+### PCIP31: Parks, Recreation, Leisure, and Fitness Studies
+
+Of the `r dim(d)[1]` schools with data from both years,  `r dim(d)[1] - sum(d$PCIP31_2000 == 0, na.rm=TRUE)` of them had "Parks, Recreation, Leisure, and Fitness Studies" programs in 2000-2001, and `r dim(d)[1] - sum(d$PCIP31_2014 == 0, na.rm=TRUE)` had such programs in 2014-2015 (as judged by a non-zero PCIP31 value).  
+
+The summary statistics for the 2000 and 2014 values, among schools with these programs, are the following.
+
+```{r, echo=TRUE}
+summary(d$PCIP31_2000[d$PCIP31_2000>0])
+summary(d$PCIP31_2014[d$PCIP31_2014>0])
+```
+
+The variable PCIP31_CHANGE measures each schools change in percentage of outdoor recreation-related degrees awarded.  The summary stats and histogram for this variable are the following.
+
+```{r}
+d$PCIP31_CHANGE <- d$PCIP31_2014 - d$PCIP31_2000
+summary(d$PCIP31_CHANGE[d$PCIP31_2014!=0 & d$PCIP31_CHANGE < 100])
+hist(d$PCIP31_CHANGE[d$PCIP31_2014!=0 & d$PCIP31_CHANGE < 40], breaks=20,  main = "Change in percentage of degrees awarded in recreation-related areas")
+```
+
+All in all, this seems to be a popular and growing academic area.  Now I'm not so sure this is a good thing.
+
+---
+
