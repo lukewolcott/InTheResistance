@@ -2,6 +2,16 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 19
+
+Using data from the National Family Health Survey 3, conducted in 2005-2006, is there a natural way to cluster Indian households, based on data about the nature of these households -- do they have electricity, a TV, a computer, a cow, an ox-drawn cart, etc?  I use topological data analysis to find the number of clusters.
+
+See folder for codebook and R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week19/NFHS-DHS-V.html
+
+TAGS: topological data analysis, clustering
+
 ## Week 18
 
 After a few weeks off to deal with end-of-semester grading, I look at some simple descriptive statistics about US college degrees awarded in math and statistics, in computer science, in environment-related areas, and in outdoor recreation-related areas.  The data comes from the US Dept of Education's College Scorecard.
