@@ -1,0 +1,124 @@
+---
+title: "Indian household clustering"
+author: "Luke Wolcott"
+date: "May 28, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+### The question
+
+Is there a natural way to cluster Indian households, based on data about the nature of these households -- do they have electricity, a TV, a computer, a cow, an ox-drawn cart?  How do these clusters correspond to the 5-level Wealth Index?
+
+### The dataset
+
+The [National Family Health Survey](http://rchiips.org/nfhs/data1.shtml) is conducted in India every 10 years or so.  The latest one was in 2015-2016 and the data is yet to be released.  In preparation, I'm looking at the third NFHS, conducted in 2005-2006.  I registered to get access to this data, (which unfortunately I can't upload to GitHub).
+
+This week, I'm looking at how Indian households cluster according to their characteristics.    The dataset includes 109,041 separate questionnaire responses, each with 3588 (!!!) variables entered.  A codebook can be found in the file `IAHR52FL.MAP` (open it with a text editor).  There's a copy of the household questionnaire starting on p.636 of `FRIND3-Vol1AndVol2.pdf`. These files are uploaded to the GitHub repo corresponding to this report.
+
+### The variables
+
+This week, I'm going to randomly sample 1000 cases from the 109,041.  I will look specifically at the following variables.
+
+| Variable | Does the household have...?   | Variable | [other characteristics] |
+|:---------|:-----------------------------|:---------|:----|
+| HV206    | electricity                 | HV205    | Rural or urban? |
+| HV207     |     radio                   | HV013 | # in household? |
+| HV208 | television               | HV014 | # of children in HH? |
+| HV209 | refrigerator            | HV216 | # of rooms for sleeping? |
+| HV210 | bicycle                  | HV219     | sex of HH head? |
+| HV211 | motorcycle/scooter       | HV220 | age of HH head? |
+| HV212 | car                     | SH30 | anyone with tuberculosis? | 
+|HV221 | non-mobile telephone       |SH58 | own this house? |
+| HV227 | bednets for sleeping |    SH62A | have cows/bulls/buffalo? |
+| HV243A | mobile telephone |       SH62B | have camels? |
+| HV243B | watch |                  SH62C | have horses/donkeys/mules? |
+| HV243C | animal-drawn cart |      SH62D | have goats? |
+| HV246 | livestock |               SH62E | have sheep? |
+| SH47B | mattress |                SH62F | have chickens? |
+| SH47C | pressure cooker |         SHSTRUC | nuclear or non-nuclear family? |
+| SH47D | chair |
+| SH47E | cot/bed |
+| SH47F | table |
+| SH47G | electric fan |
+| SH47I | B&W television |
+| SH47J | color television |
+| SH47K | sewing machine |
+| SH47N | computer |
+| SH47U | water pump |
+| SH47V | thresher |
+| SH47W | tractor |
+| SH56A | any windows |
+| SH56B | windows with glass |
+| SH56C | windows with screens |
+| SH56D | windows with curtains/shutters |
+
+
+
+```{r}
+library(dplyr)
+
+d <- read.csv("thousand_cases.csv", header=TRUE)
+
+# subset for the columns we're interested in
+df <- select(d, HV025, HV206,HV207,HV208,HV209,HV210,HV211,HV212,HV219,HV221,
+             HV227,HV243A,HV243B,HV243C,HV246,SH30,SH47B,SH47C,SH47D,
+             SH47E,SH47F,SH47G,SH47I,SH47J,SH47K,SH47N,SH47U,SH47V,SH47W,
+             SH56A,SH56B,SH56C,SH56D,SH58,SH62A,SH62B,SH62C,SH62E,SH62E,SH62F,
+             SHSTRUC,
+             HV013,HV014,HV216,HV220)
+
+# if factor variables, convert to 0/1.  
+# otherwise, center at zero and scale so sd=1.
+for (i in 1:ncol(df)){
+      if (is.factor(df[,i]))
+            df[,i] <- as.numeric(df[,i])-1
+      else
+            df[,i] <- scale(as.numeric(df[,i]))
+}
+
+# there are a handful of rows with some NAs, and this will take them out
+df <- df[!is.na(apply(df,1,sum)),]
+
+# now df is 993 x 44
+```
+
+
+
+
+### TDA to detect clusters
+
+As a first step, we can use topological data analysis (TDA) to see if there is a natural number of clusters in the data.  To do the whole 993 x 44 dataset with maxscale=10, it takes my laptop about 7.5 minutes.  It only took about 2 minutes with maxscale=5.  Below we have the persistence homology barcode and the persistence diagram.
+
+(See [this report](https://lukewolcott.github.io/WaterAndRainInLakeSuperior/water_and_rain.html) or [this report](https://lukewolcott.github.io/TDAwithSimulatedData/TDAwithSimulatedData.html) for some details on using TDA.)
+
+
+```{r, cache=TRUE}
+library(TDA)
+maxscale <- 10
+maxdimension <- 1
+Diag <- ripsDiag(X = df, maxdimension, maxscale, library = "GUDHI", location=TRUE)      
+plot(Diag[["diagram"]], barcode = TRUE)
+mtext("Barcode of 0D and 1D persistent homology")
+legend("right", lty=c(1,1), lwd=c(3,3), col=c("red", "black"), legend=c("H1", "H0"))
+plot(Diag[["diagram"]], barcode = FALSE)
+mtext("Persistence diagram of 0D and 1D persistent homology")
+legend("right", lty=c(1,1), lwd=c(3,3), col=c("red", "black"), legend=c("H1", "H0"))
+```
+
+
+These look as we might expect.  Because there are 993 black barcode lines, it's hard to see how many larger clusters we are looking at.  For this we can look explicitly at the birth and death of the H0 intervals.
+
+```{r}
+Diag[["diagram"]][1:15,]
+```
+
+We see that before everything gets clumped together into one connected component, there is a long stretch with two and three clusters.  There is less of a persistent 5-cluster pattern.  
+
+Next week, I'll look at how a k-means clustering algorithm, with k=3, clusters the households in this dataset.  I'll compare this clustering to the NFHS-generated variable "Wealth Index", which has 5 levels.  This index is constructed in a somewhat ad hoc manner, and the hope might be to come up with a better, more complex measure of household wealth.
+
+---
