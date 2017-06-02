@@ -22,11 +22,11 @@ This week, I'm looking at how Indian households cluster according to their chara
 
 ### The variables
 
-This week, I'm going to randomly sample 1000 cases from the 109,041.  I will look specifically at the following variables.
+I will look specifically at the following variables.   
 
 | Variable | Does the household have...?   | Variable | [other characteristics] |
 |:---------|:-----------------------------|:---------|:----|
-| HV206    | electricity                 | HV205    | Rural or urban? |
+| HV206    | electricity                 | HV025    | Rural or urban? |
 | HV207     |     radio                   | HV013 | # in household? |
 | HV208 | television               | HV014 | # of children in HH? |
 | HV209 | refrigerator            | HV216 | # of rooms for sleeping? |
@@ -59,6 +59,12 @@ This week, I'm going to randomly sample 1000 cases from the 109,041.  I will loo
 
 
 
+
+
+
+
+### TDA to detect clusters
+
 ```{r}
 library(dplyr)
 
@@ -68,7 +74,7 @@ d <- read.csv("thousand_cases.csv", header=TRUE)
 df <- select(d, HV025, HV206,HV207,HV208,HV209,HV210,HV211,HV212,HV219,HV221,
              HV227,HV243A,HV243B,HV243C,HV246,SH30,SH47B,SH47C,SH47D,
              SH47E,SH47F,SH47G,SH47I,SH47J,SH47K,SH47N,SH47U,SH47V,SH47W,
-             SH56A,SH56B,SH56C,SH56D,SH58,SH62A,SH62B,SH62C,SH62E,SH62E,SH62F,
+             SH56A,SH56B,SH56C,SH56D,SH58,SH62A,SH62B,SH62C,SH62D,SH62E,SH62F,
              SHSTRUC,
              HV013,HV014,HV216,HV220)
 
@@ -88,11 +94,7 @@ df <- df[!is.na(apply(df,1,sum)),]
 ```
 
 
-
-
-### TDA to detect clusters
-
-As a first step, we can use topological data analysis (TDA) to see if there is a natural number of clusters in the data.  To do the whole 993 x 44 dataset with maxscale=10, it takes my laptop about 7.5 minutes.  It only took about 2 minutes with maxscale=5.  Below we have the persistence homology barcode and the persistence diagram.
+As a first step, we can use topological data analysis (TDA) to see if there is a natural number of clusters in the data.  For the sake of computation, I'll sample 1000 of the 109,041 cases (and remove 7 with missing data).  To do the whole 993 x 44 dataset with maxscale=10, it takes my laptop about 7.5 minutes.  It only took about 2 minutes with maxscale=5.  Below we have the persistence homology barcode and the persistence diagram.
 
 (See [this report](https://lukewolcott.github.io/WaterAndRainInLakeSuperior/water_and_rain.html) or [this report](https://lukewolcott.github.io/TDAwithSimulatedData/TDAwithSimulatedData.html) for some details on using TDA.)
 
@@ -111,14 +113,78 @@ legend("right", lty=c(1,1), lwd=c(3,3), col=c("red", "black"), legend=c("H1", "H
 ```
 
 
-These look as we might expect.  Because there are 993 black barcode lines, it's hard to see how many larger clusters we are looking at.  For this we can look explicitly at the birth and death of the H0 intervals.
+Because there are 993 black barcode lines, it's hard to see how many larger clusters we are looking at.  For this we can look explicitly at the birth and death of the H0 intervals.
 
 ```{r}
 Diag[["diagram"]][1:15,]
 ```
 
-We see that before everything gets clumped together into one connected component, there is a long stretch with two and three clusters.  There is less of a persistent 5-cluster pattern.  
+We see that before everything gets clumped together into one connected component, there is a long stretch with two clusters.  And there is a persistent feature of k=5 clusters.  So, miraculously or by design, it was a good idea to use a Wealth Index with values 1-5.
 
-Next week, I'll look at how a k-means clustering algorithm, with k=3, clusters the households in this dataset.  I'll compare this clustering to the NFHS-generated variable "Wealth Index", which has 5 levels.  This index is constructed in a somewhat ad hoc manner, and the hope might be to come up with a better, more complex measure of household wealth.
+### What are the two clusters?
+
+Before we cluster with k=5, let's see what we can say about the situation with k=2, which was suggested by TDA.  It seems the two clusters have similar sizes.
+
+```{r}
+set.seed(134)
+km2 <- kmeans(df,2,nstart=20)
+table(km2$cluster)
+```
+
+We can tabulate the mean for each variable, grouped by cluster, to look for any large differences.
+
+```{r}
+options(digits=3)
+df2 <- cbind(df,cluster2=km2$cluster)
+x <- df2 %>% group_by(cluster2) %>% summarise_all(mean)
+as.data.frame(x)
+options(digits=8)
+```
+
+If we plot histograms of a few of these variables, the picture emerges that cluster 1 tends to be rural households, with almost no amenities like a refrigerator or cell phone.  Cluster 2 tends to be urban households, almost all electrified, and much more likely to have household amenities.
+
+
+```{r}
+library(ggplot2)
+g <- ggplot(df, aes(fill=as.factor(km2$cluster)))
+#g + geom_bar(aes(HV206), position = "dodge")
+
+# use gridExtra library to make 2x2 plots here
+library(gridExtra)
+ 
+p1 <- g + geom_bar(aes(HV206), position = "dodge")+labs(x="HV206: electricity")
+p2 <- g + geom_bar(aes(HV209), position = "dodge")+labs(x="HV209: refrigerator")
+p3 <- g + geom_bar(aes(HV243A), position = "dodge")+labs(x="HV243A: cell phone")
+p4 <- g + geom_bar(aes(HV025), position = "dodge")+labs(x="HV025: rural(0) or urban(1)")
+
+grid.arrange(p4,p1,p3,p2, ncol=2, nrow=2,top=quote("Comparing two clusters"))
+
+
+```
+
+
+### Comparing clusters by Wealth Index
+
+Now let's return to the full dataset of 109,041 households, and use the same 44 variables to cluster with k=5.  
+
+The supplemental file `NFHS3SUP.pdf`, p.6, explains how the "Wealth Index" variable HV270 was constructed using PCA to generate weight for these variables.  The index is a cumulative score, normalized to a ranking from 1 (poorest) to 5 (wealthiest).  How do the five clusters compare with the Wealth Index?
+
+```{r}
+# all_cases_cleaned.csv is the full IAHR52FL.SAV cleaned by clean.R
+df_full <- read.csv("all_cases_cleaned.csv", header=TRUE)
+
+km5 <- kmeans(df_full[,1:45],5,nstart=3) # larger nstart throws a memory error
+
+table(km5$cluster, df_full$HV270)
+```
+
+Cluster 5 seems to capture most of the Richest and Richer households.  Cluster 4 is capturing a lot of the Richer, with some bleeding into Richest and Middle.  Cluster 3 is roughly evenly spread between Middle, Poorer, and Poorest.  Cluster 2 and 1 do not bin well with the Wealth Index, although cluster 2 has few Richest households and cluster 1 has few Poorest ones.
+
+```{r}
+g2 <- ggplot(df_full, aes(fill=as.factor(km5$cluster)))
+g2 + geom_bar(aes(HV270), position = "dodge")
+```
+
+
 
 ---
