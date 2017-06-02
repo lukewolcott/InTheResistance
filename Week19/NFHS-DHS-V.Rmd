@@ -146,8 +146,7 @@ If we plot histograms of a few of these variables, the picture emerges that clus
 
 ```{r}
 library(ggplot2)
-g <- ggplot(df, aes(fill=as.factor(km2$cluster)))
-#g + geom_bar(aes(HV206), position = "dodge")
+g <- ggplot(df, aes(fill=as.factor(km2$cluster)))+theme(legend.title=element_blank())
 
 # use gridExtra library to make 2x2 plots here
 library(gridExtra)
