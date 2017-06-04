@@ -1,0 +1,152 @@
+---
+title: 'Indian household heads: women or men?'
+author: "Luke Wolcott"
+date: "June 4, 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo=FALSE)
+```
+
+Continuing with the Indian NFHS-3 dataset from [last week](https://lukewolcott.github.io/InTheResistance/Week19/NFHS-DHS-V.html), now I'm interested in the variable HV219, which asks, "Is the head of the household male or female?"
+
+First I look at the difference between male- and female-led households, and then I build an algorithm that predicts the sex of the HH head from household characteristics.
+
+### Differences in male- and female-led households
+
+I'm using the same cleaned dataset from last week, based on the 109,041 questionnaire responses about Indian households.  In last week's report I listed the 44 household characteristic variables that I'm looking at.
+
+```{r, cache=TRUE}
+df <- read.csv("all_cases_cleaned.csv", header = TRUE)
+# this dataset is 107962 x 46
+```
+
+First, a table of the HV219 variable shows that only `r round(15516/(15516+92446)*100, digits=2)` percent of households have women heads.
+
+```{r}
+df2 <- df
+df2$HV219 <- as.factor(df$HV219)
+levels(df2$HV219) <- c("Male", "Female")
+table(df2$HV219)
+```
+
+The first piece of good news is that there is not much difference in the distribution of HV270, the "Wealth Index", between the two types of household.
+
+```{r}
+library(ggplot2)
+g <- ggplot(data=df2, aes(HV219))+ coord_flip()
+g <- g + geom_bar(aes(fill=HV270), position="fill") 
+g + labs(title="Wealth Index in male/female-led households")
+```
+
+A quick way to look for differences between male- and female-led households is to compare the mean value of the "does not have / does have" variables.
+
+```{r}
+library(plyr)
+library(dplyr)
+options(digits=3)
+x <- df2 %>% group_by(HV219) %>% summarise_all(mean)
+as.data.frame(x[,1:41])
+options(digits=8)
+```
+
+Many of these means are not significantly different, although there is a tendency for male-led HHs to have more stuff.  By this measure, male-led HHs are 2-3 times more likely to have threshers (SH47V) and tractors (SH47W), and to have livestock of various kinds (SH62A - SH62F).  Women-led HHs are more prevalent in urban HHs (HV025), and with non-nuclear family structures (SHSTRUC).
+
+We can pick out a few of these to look at histograms.
+
+```{r}
+g <- ggplot(data=df2, aes(HV219))+ coord_flip() +theme(legend.title=element_blank())
+
+# use gridExtra library to make 2x2 plots here
+library(gridExtra)
+p1 <- g + geom_bar(aes(fill=as.factor(SH47W)), position="fill")+labs(x="tractor?")
+p2 <- g + geom_bar(aes(fill=as.factor(HV212)), position="fill")+labs(x="car?")
+p3 <- g + geom_bar(aes(fill=as.factor(SHSTRUC)), position="fill")+labs(x="non-nuclear family?")
+p4 <- g + geom_bar(aes(fill=as.factor(HV025)), position="fill")+labs(x="urban?")
+
+grid.arrange(p4,p1,p3,p2, ncol=2, nrow=2,top=quote("Comparing male- and female-led HHs"))
+
+
+```
+
+### Predicting who's in charge
+
+From our cleaned dataset of 107962 households with 44 characteristic variables, we want to build an algorithm that will predict HV219: whether the head of the household is male or female.
+
+The factor variables have been converted into 0/1s, and the numeric variables (number in household, number of children, number of rooms for sleeping) have been scaled to have mean 0 and standard deviation 1.
+
+A good first try would be with a logistic regression.  
+
+```{r}
+set.seed(134)
+p <- 0.8
+inTrain <- sample(1:nrow(df), nrow(df)*p)
+training <- df[inTrain,]
+test <- df[inTrain,]
+training2 <- df2[inTrain,1:45]
+test2 <- df2[inTrain,1:45]
+```
+
+```{r, cache=TRUE}
+fit.glm <- glm(HV219 ~ ., family = binomial,data=training)
+#anova(fit.glm, test = "Chisq")
+```
+
+We can check how the model predicts on the test dataset.
+
+```{r, cache=TRUE}
+library(caret)
+pred.glm <- predict(fit.glm, test, type='response')
+pred_binary.glm <- as.factor(ifelse(pred.glm > 0.5, 1,0))
+levels(pred_binary.glm) <- 0:1
+confusionMatrix(pred_binary.glm, test$HV219)
+```
+
+This is pretty bad.  Our algorithm is almost always predicting "Male".  
+
+Let's try with a tree:
+
+```{r, cache=TRUE}
+fit.tree <- train(HV219 ~ ., method = "rpart", data=training2)
+```
+
+```{r}
+library(caret)
+pred.tree <- predict(fit.tree, test2)
+#pred_binary.tree <- as.factor(ifelse(pred.tree > 0.5, 1, 0))
+#levels(pred_binary.tree) <- c("Male", "Female")
+confusionMatrix(pred.tree, test2$HV219)
+```
+
+Still very bad.  Let's see if a random forest model can do better:
+
+```{r, cache=TRUE}
+library(randomForest)
+fit.rf <- randomForest(HV219 ~ ., data = training2, method = "class")
+```
+
+```{r}
+library(randomForest)
+pred.rf <- predict(fit.rf, test2)
+confusionMatrix(pred.rf, test2$HV219)
+```
+
+This is certainly better, but still getting a lot of false male predictions.  Finally, let's try some boosting:
+
+```{r,cache=TRUE}
+fit.GBM <- train(HV219~., data=training2, method="gbm",verbose=FALSE)
+```
+
+```{r}
+pred.GBM <- predict(fit.GBM,test2)
+confusionMatrix(pred.GBM,test2$HV219)
+```
+
+Also very bad.  Random forests win again.  I could make the algorithm better, I'm sure, by adding back in some of the variables I ignored.  I'm using 45 here, and the original dataset had 3588!
+
+---
+
+
+
