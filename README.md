@@ -2,6 +2,16 @@
 
 This repo collects various data analyses about political protests, immigration, environmental issues, police brutality and crime, and the arts.
 
+## Week 20
+
+Continuing with the dataset from Week 20, a survey of 109041 Indian households' characteristics, this week I compare households that have a male head and female head, and build an algorithm to predict who's in charge.
+
+See folder for R Markdown report with all code, or read the report at:
+
+https://lukewolcott.github.io/InTheResistance/Week20/NFHS-DHS-V-v3.html
+
+TAGS: ggplot, logistic regression, random forests, boosting
+
 ## Week 19
 
 Using data from the National Family Health Survey 3, conducted in 2005-2006, is there a natural way to cluster Indian households, based on data about the nature of these households -- do they have electricity, a TV, a computer, a cow, an ox-drawn cart, etc?  I use topological data analysis to find the number of clusters.  I look at how the data clusters itself into 2, or 5 clusters, and compare it to the NFHS "Wealth Index" variable.
@@ -10,7 +20,7 @@ See folder for codebook and R Markdown report with all code, or read the report 
 
 https://lukewolcott.github.io/InTheResistance/Week19/NFHS-DHS-V.html
 
-TAGS: topological data analysis, clustering
+TAGS: topological data analysis, clustering, ggplot
 
 ## Week 18
 
