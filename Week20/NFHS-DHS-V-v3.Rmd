@@ -144,7 +144,7 @@ pred.GBM <- predict(fit.GBM,test2)
 confusionMatrix(pred.GBM,test2$HV219)
 ```
 
-Also very bad.  Random forests win again.  I could make the algorithm better, I'm sure, by adding back in some of the variables I ignored.  I'm using 45 here, and the original dataset had 3588!
+Also very bad.  Random forests win again.  I could make the algorithm better, I'm sure, by adding back in some of the variables I ignored.  I'm using 45 here, and the original dataset had 3588!  
 
 ---
 
