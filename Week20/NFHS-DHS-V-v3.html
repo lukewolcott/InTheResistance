@@ -161,111 +161,117 @@ $(document).ready(function () {
 ## 
 ##           Reference
 ## Prediction     0     1
-##          0 73838 12083
-##          1   177   271
+##          0 18383  3091
+##          1    48    71
 ##                                             
-##                Accuracy : 0.85805           
-##                  95% CI : (0.85571, 0.86037)
-##     No Information Rate : 0.85696           
-##     P-Value [Acc &gt; NIR] : 0.1818            
+##                Accuracy : 0.85463           
+##                  95% CI : (0.84986, 0.85931)
+##     No Information Rate : 0.85356           
+##     P-Value [Acc &gt; NIR] : 0.33314           
 ##                                             
-##                   Kappa : 0.03265           
-##  Mcnemar's Test P-Value : &lt;2e-16            
+##                   Kappa : 0.03301           
+##  Mcnemar's Test P-Value : &lt; 2e-16           
 ##                                             
-##             Sensitivity : 0.997609          
-##             Specificity : 0.021936          
-##          Pos Pred Value : 0.859371          
-##          Neg Pred Value : 0.604911          
-##              Prevalence : 0.856963          
-##          Detection Rate : 0.854913          
-##    Detection Prevalence : 0.994813          
-##       Balanced Accuracy : 0.509772          
+##             Sensitivity : 0.997396          
+##             Specificity : 0.022454          
+##          Pos Pred Value : 0.856058          
+##          Neg Pred Value : 0.596639          
+##              Prevalence : 0.853564          
+##          Detection Rate : 0.851341          
+##    Detection Prevalence : 0.994489          
+##       Balanced Accuracy : 0.509925          
 ##                                             
 ##        'Positive' Class : 0                 
 ## </code></pre>
-<p>This is pretty bad. Our algorithm is almost always predicting “Male”.</p>
+<p>This is pretty bad. Our algorithm is almost always predicting “Male”, and we can’t be confident it will do better than just guessing “Male” every time.</p>
 <p>Let’s try with a tree:</p>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction  Male Female
-##     Male   73035  10548
-##     Female   980   1806
+##     Male   18176   2666
+##     Female   255    496
 ##                                             
-##                Accuracy : 0.86653           
-##                  95% CI : (0.86424, 0.86879)
-##     No Information Rate : 0.85696           
-##     P-Value [Acc &gt; NIR] : 2.7823e-16        
+##                Accuracy : 0.86472           
+##                  95% CI : (0.86009, 0.86926)
+##     No Information Rate : 0.85356           
+##     P-Value [Acc &gt; NIR] : 1.4531e-06        
 ##                                             
-##                   Kappa : 0.19626           
+##                   Kappa : 0.20906           
 ##  Mcnemar's Test P-Value : &lt; 2.22e-16        
 ##                                             
-##             Sensitivity : 0.98676           
-##             Specificity : 0.14619           
-##          Pos Pred Value : 0.87380           
-##          Neg Pred Value : 0.64824           
-##              Prevalence : 0.85696           
-##          Detection Rate : 0.84562           
-##    Detection Prevalence : 0.96774           
-##       Balanced Accuracy : 0.56647           
+##             Sensitivity : 0.98616           
+##             Specificity : 0.15686           
+##          Pos Pred Value : 0.87209           
+##          Neg Pred Value : 0.66045           
+##              Prevalence : 0.85356           
+##          Detection Rate : 0.84175           
+##    Detection Prevalence : 0.96522           
+##       Balanced Accuracy : 0.57151           
 ##                                             
 ##        'Positive' Class : Male              
 ## </code></pre>
-<p>Still very bad. Let’s see if a random forest model can do better:</p>
+<p>Still very bad, but at least it is reliably better than the No Information Rate. Let’s see if a random forest model can do better:</p>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction  Male Female
-##     Male   73760   4152
-##     Female   255   8202
+##     Male   18268   2725
+##     Female   163    437
 ##                                             
-##                Accuracy : 0.94897           
-##                  95% CI : (0.94749, 0.95043)
-##     No Information Rate : 0.85696           
-##     P-Value [Acc &gt; NIR] : &lt; 2.22e-16        
+##                Accuracy : 0.86625           
+##                  95% CI : (0.86164, 0.87077)
+##     No Information Rate : 0.85356           
+##     P-Value [Acc &gt; NIR] : 4.975e-08         
 ##                                             
-##                   Kappa : 0.76038           
+##                   Kappa : 0.19471           
 ##  Mcnemar's Test P-Value : &lt; 2.22e-16        
 ##                                             
-##             Sensitivity : 0.99655           
-##             Specificity : 0.66391           
-##          Pos Pred Value : 0.94671           
-##          Neg Pred Value : 0.96985           
-##              Prevalence : 0.85696           
-##          Detection Rate : 0.85401           
-##    Detection Prevalence : 0.90208           
-##       Balanced Accuracy : 0.83023           
+##             Sensitivity : 0.99116           
+##             Specificity : 0.13820           
+##          Pos Pred Value : 0.87019           
+##          Neg Pred Value : 0.72833           
+##              Prevalence : 0.85356           
+##          Detection Rate : 0.84601           
+##    Detection Prevalence : 0.97221           
+##       Balanced Accuracy : 0.56468           
 ##                                             
 ##        'Positive' Class : Male              
 ## </code></pre>
-<p>This is certainly better, but still getting a lot of false male predictions. Finally, let’s try some boosting:</p>
+<p>This is better, but not by much. It seems that we’re going to have to engineer better features if we want to do better. But finally, let’s try some boosting to see if that does something magical:</p>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction  Male Female
-##     Male   73251  10628
-##     Female   764   1726
+##     Male   18227   2673
+##     Female   204    489
 ##                                             
-##                Accuracy : 0.8681            
-##                  95% CI : (0.86583, 0.87035)
-##     No Information Rate : 0.85696           
-##     P-Value [Acc &gt; NIR] : &lt; 2.22e-16        
+##                Accuracy : 0.86676           
+##                  95% CI : (0.86216, 0.87127)
+##     No Information Rate : 0.85356           
+##     P-Value [Acc &gt; NIR] : 1.471e-08         
 ##                                             
-##                   Kappa : 0.19387           
+##                   Kappa : 0.21222           
 ##  Mcnemar's Test P-Value : &lt; 2.22e-16        
 ##                                             
-##             Sensitivity : 0.98968           
-##             Specificity : 0.13971           
-##          Pos Pred Value : 0.87329           
-##          Neg Pred Value : 0.69317           
-##              Prevalence : 0.85696           
-##          Detection Rate : 0.84812           
-##    Detection Prevalence : 0.97117           
-##       Balanced Accuracy : 0.56469           
+##             Sensitivity : 0.98893           
+##             Specificity : 0.15465           
+##          Pos Pred Value : 0.87211           
+##          Neg Pred Value : 0.70563           
+##              Prevalence : 0.85356           
+##          Detection Rate : 0.84412           
+##    Detection Prevalence : 0.96791           
+##       Balanced Accuracy : 0.57179           
 ##                                             
 ##        'Positive' Class : Male              
 ## </code></pre>
-<p>Also very bad. Random forests win again. I could make the algorithm better, I’m sure, by adding back in some of the variables I ignored. I’m using 45 here, and the original dataset had 3588!</p>
+<p>Also very bad. In all cases our algorithm predicts “Male” too often; the false positive rate is very high so the specificity is an abyssmal 13-15%.</p>
+</div>
+<div id="better-features-for-better-prediction" class="section level3">
+<h3>Better features for better prediction</h3>
+<p>This first pass at a household head prediction algorithm was naively hopeful that simply counting things like beds, windows, bicycles, cows, and tractors in a household might allow me to predict who was in charge. For better or for worse, the model needs more nuance.</p>
+<p>A good first place to look would be at the role of the scaled numerical variables (# in household, # of children, # of rooms for sleeping, age of HH head) versus the 0/1 categorical variables. Does the scaling affect the model performance?</p>
+<p>There are many categorical variables with more than two levels – what is the house floor made of? what are the walls made of? what state is the house in? where do they get their water? how do they treat their water? what type of cooking fuel do they use? what is the HH Wealth Index? – that I left out of the model but could add in. And there are variables related to health practices in the household that might help too. I could make the algorithm better, I’m sure, by adding back in some of the variables I ignored. I’m using 45 here, and the original dataset had 3588!</p>
 <hr />
 </div>
 

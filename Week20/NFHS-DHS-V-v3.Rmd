@@ -19,6 +19,7 @@ First I look at the difference between male- and female-led households, and then
 I'm using the same cleaned dataset from last week, based on the 109,041 questionnaire responses about Indian households.  In last week's report I listed the 44 household characteristic variables that I'm looking at.
 
 ```{r, cache=TRUE}
+# all_cases_cleaned.csv is the full IAHR52FL.SAV cleaned by clean.R
 df <- read.csv("all_cases_cleaned.csv", header = TRUE)
 # this dataset is 107962 x 46
 ```
@@ -26,6 +27,7 @@ df <- read.csv("all_cases_cleaned.csv", header = TRUE)
 First, a table of the HV219 variable shows that only `r round(15516/(15516+92446)*100, digits=2)` percent of households have women heads.
 
 ```{r}
+# df2 stores HV219 as factor Male/Female, instead of integer 0/1
 df2 <- df
 df2$HV219 <- as.factor(df$HV219)
 levels(df2$HV219) <- c("Male", "Female")
@@ -36,7 +38,7 @@ The first piece of good news is that there is not much difference in the distrib
 
 ```{r}
 library(ggplot2)
-g <- ggplot(data=df2, aes(HV219))+ coord_flip()
+g <- ggplot(data=df2, aes(HV219)) + coord_flip()
 g <- g + geom_bar(aes(fill=HV270), position="fill") 
 g + labs(title="Wealth Index in male/female-led households")
 ```
@@ -48,6 +50,8 @@ library(plyr)
 library(dplyr)
 options(digits=3)
 x <- df2 %>% group_by(HV219) %>% summarise_all(mean)
+
+# outputs the mean Male and Female values of each 0/1 column
 as.data.frame(x[,1:41])
 options(digits=8)
 ```
@@ -57,18 +61,23 @@ Many of these means are not significantly different, although there is a tendenc
 We can pick out a few of these to look at histograms.
 
 ```{r}
-g <- ggplot(data=df2, aes(HV219))+ coord_flip() +theme(legend.title=element_blank())
-
 # use gridExtra library to make 2x2 plots here
 library(gridExtra)
-p1 <- g + geom_bar(aes(fill=as.factor(SH47W)), position="fill")+labs(x="tractor?")
-p2 <- g + geom_bar(aes(fill=as.factor(HV212)), position="fill")+labs(x="car?")
-p3 <- g + geom_bar(aes(fill=as.factor(SHSTRUC)), position="fill")+labs(x="non-nuclear family?")
-p4 <- g + geom_bar(aes(fill=as.factor(HV025)), position="fill")+labs(x="urban?")
 
-grid.arrange(p4,p1,p3,p2, ncol=2, nrow=2,top=quote("Comparing male- and female-led HHs"))
+g <- ggplot(data=df2, aes(HV219))+ coord_flip() + 
+      theme(legend.title=element_blank())
 
+p1 <- g + geom_bar(aes(fill=as.factor(SH47W)), position="fill") +
+      labs(x="tractor?")
+p2 <- g + geom_bar(aes(fill=as.factor(HV212)), position="fill") +
+      labs(x="car?")
+p3 <- g + geom_bar(aes(fill=as.factor(SHSTRUC)), position="fill") +
+      labs(x="non-nuclear family?")
+p4 <- g + geom_bar(aes(fill=as.factor(HV025)), position="fill") +
+      labs(x="urban?")
 
+grid.arrange(p4,p1,p3,p2, ncol=2, nrow=2,
+             top=quote("Comparing male- and female-led HHs"))
 ```
 
 ### Predicting who's in charge
@@ -84,19 +93,20 @@ set.seed(134)
 p <- 0.8
 inTrain <- sample(1:nrow(df), nrow(df)*p)
 training <- df[inTrain,]
-test <- df[inTrain,]
+test <- df[-inTrain,]
+
+# opt to leave out the Wealth Index variable for later models
 training2 <- df2[inTrain,1:45]
-test2 <- df2[inTrain,1:45]
+test2 <- df2[-inTrain,1:45]
 ```
 
 ```{r, cache=TRUE}
 fit.glm <- glm(HV219 ~ ., family = binomial,data=training)
-#anova(fit.glm, test = "Chisq")
 ```
 
 We can check how the model predicts on the test dataset.
 
-```{r, cache=TRUE}
+```{r}
 library(caret)
 pred.glm <- predict(fit.glm, test, type='response')
 pred_binary.glm <- as.factor(ifelse(pred.glm > 0.5, 1,0))
@@ -104,7 +114,7 @@ levels(pred_binary.glm) <- 0:1
 confusionMatrix(pred_binary.glm, test$HV219)
 ```
 
-This is pretty bad.  Our algorithm is almost always predicting "Male".  
+This is pretty bad.  Our algorithm is almost always predicting "Male", and we can't be confident it will do better than just guessing "Male" every time.  
 
 Let's try with a tree:
 
@@ -115,12 +125,10 @@ fit.tree <- train(HV219 ~ ., method = "rpart", data=training2)
 ```{r}
 library(caret)
 pred.tree <- predict(fit.tree, test2)
-#pred_binary.tree <- as.factor(ifelse(pred.tree > 0.5, 1, 0))
-#levels(pred_binary.tree) <- c("Male", "Female")
 confusionMatrix(pred.tree, test2$HV219)
 ```
 
-Still very bad.  Let's see if a random forest model can do better:
+Still very bad, but at least it is reliably better than the No Information Rate.  Let's see if a random forest model can do better:
 
 ```{r, cache=TRUE}
 library(randomForest)
@@ -133,7 +141,7 @@ pred.rf <- predict(fit.rf, test2)
 confusionMatrix(pred.rf, test2$HV219)
 ```
 
-This is certainly better, but still getting a lot of false male predictions.  Finally, let's try some boosting:
+This is better, but not by much.  It seems that we're going to have to engineer better features if we want to do better.  But finally, let's try some boosting to see if that does something magical:
 
 ```{r,cache=TRUE}
 fit.GBM <- train(HV219~., data=training2, method="gbm",verbose=FALSE)
@@ -144,7 +152,16 @@ pred.GBM <- predict(fit.GBM,test2)
 confusionMatrix(pred.GBM,test2$HV219)
 ```
 
-Also very bad.  Random forests win again.  I could make the algorithm better, I'm sure, by adding back in some of the variables I ignored.  I'm using 45 here, and the original dataset had 3588!  
+Also very bad.  In all cases our algorithm predicts "Male" too often; the false positive rate is very high so the specificity is an abyssmal 13-15%.
+
+### Better features for better prediction
+
+This first pass at a household head prediction algorithm was naively hopeful that simply counting things like beds, windows, bicycles, cows, and tractors in a household might allow me to predict who was in charge.  For better or for worse, the model needs more nuance.  
+
+A good first place to look would be at the role of the scaled numerical variables (# in household, # of children, # of rooms for sleeping, age of HH head) versus the 0/1 categorical variables.  Does the scaling affect the model performance?
+
+There are many categorical variables with more than two levels -- what is the house floor made of? what are the walls made of? what state is the house in? where do they get their water? how do they treat their water? what type of cooking fuel do they use?  what is the HH Wealth Index? -- that I left out of the model but could add in.  And there are variables related to health practices in the household that might help too.  I could make the algorithm better, I'm sure, by adding back in some of the variables I ignored.  I'm using 45 here, and the original dataset had 3588!  
+
 
 ---
 
