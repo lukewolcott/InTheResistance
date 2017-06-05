@@ -58,16 +58,13 @@ I will look specifically at the following variables.
 | SH56D | windows with curtains/shutters |
 
 
-
-
-
-
-
 ### TDA to detect clusters
 
 ```{r}
 library(dplyr)
 
+# the original dataset was cleaned using the code in clean.R,
+# run on a sample of 1000 cases from the 109041 total.
 d <- read.csv("thousand_cases.csv", header=TRUE)
 
 # subset for the columns we're interested in
@@ -103,10 +100,16 @@ As a first step, we can use topological data analysis (TDA) to see if there is a
 library(TDA)
 maxscale <- 10
 maxdimension <- 1
-Diag <- ripsDiag(X = df, maxdimension, maxscale, library = "GUDHI", location=TRUE)      
+
+# compute the Rips complex
+Diag <- ripsDiag(X = df, maxdimension, maxscale, library = "GUDHI", location=TRUE)
+
+# plot persistence barcode
 plot(Diag[["diagram"]], barcode = TRUE)
 mtext("Barcode of 0D and 1D persistent homology")
 legend("right", lty=c(1,1), lwd=c(3,3), col=c("red", "black"), legend=c("H1", "H0"))
+
+# plot persistence diagram
 plot(Diag[["diagram"]], barcode = FALSE)
 mtext("Persistence diagram of 0D and 1D persistent homology")
 legend("right", lty=c(1,1), lwd=c(3,3), col=c("red", "black"), legend=c("H1", "H0"))
@@ -116,6 +119,7 @@ legend("right", lty=c(1,1), lwd=c(3,3), col=c("red", "black"), legend=c("H1", "H
 Because there are 993 black barcode lines, it's hard to see how many larger clusters we are looking at.  For this we can look explicitly at the birth and death of the H0 intervals.
 
 ```{r}
+# output 15 longest persistence intervals
 Diag[["diagram"]][1:15,]
 ```
 
@@ -127,6 +131,8 @@ Before we cluster with k=5, let's see what we can say about the situation with k
 
 ```{r}
 set.seed(134)
+
+# cluster into 2 clusters, output table of assignments
 km2 <- kmeans(df,2,nstart=20)
 table(km2$cluster)
 ```
@@ -146,19 +152,23 @@ If we plot histograms of a few of these variables, the picture emerges that clus
 
 ```{r}
 library(ggplot2)
-g <- ggplot(df, aes(fill=as.factor(km2$cluster)))+theme(legend.title=element_blank())
 
 # use gridExtra library to make 2x2 plots here
 library(gridExtra)
+
+g <- ggplot(df, aes(fill=as.factor(km2$cluster))) +       
+      theme(legend.title=element_blank())
  
-p1 <- g + geom_bar(aes(HV206), position = "dodge")+labs(x="HV206: electricity")
-p2 <- g + geom_bar(aes(HV209), position = "dodge")+labs(x="HV209: refrigerator")
-p3 <- g + geom_bar(aes(HV243A), position = "dodge")+labs(x="HV243A: cell phone")
-p4 <- g + geom_bar(aes(HV025), position = "dodge")+labs(x="HV025: rural(0) or urban(1)")
+p1 <- g + geom_bar(aes(HV206), position = "dodge") + 
+      labs(x="HV206: electricity")
+p2 <- g + geom_bar(aes(HV209), position = "dodge") + 
+      labs(x="HV209: refrigerator")
+p3 <- g + geom_bar(aes(HV243A), position = "dodge") + 
+      labs(x="HV243A: cell phone")
+p4 <- g + geom_bar(aes(HV025), position = "dodge") + 
+      labs(x="HV025: rural(0) or urban(1)")
 
-grid.arrange(p4,p1,p3,p2, ncol=2, nrow=2,top=quote("Comparing two clusters"))
-
-
+grid.arrange(p4,p1,p3,p2,ncol=2,nrow=2,top=quote("Comparing two clusters"))
 ```
 
 
@@ -172,7 +182,9 @@ The supplemental file `NFHS3SUP.pdf`, p.6, explains how the "Wealth Index" varia
 # all_cases_cleaned.csv is the full IAHR52FL.SAV cleaned by clean.R
 df_full <- read.csv("all_cases_cleaned.csv", header=TRUE)
 
-km5 <- kmeans(df_full[,1:45],5,nstart=3) # larger nstart throws a memory error
+# cluster into 5 clusters, ignoring the Wealth Index column
+# larger nstart throws a memory error on my laptop
+km5 <- kmeans(df_full[,1:45],5,nstart=3) 
 
 table(km5$cluster, df_full$HV270)
 ```
