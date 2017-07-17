@@ -4,7 +4,7 @@ This repo collects various data analyses about political protests, immigration, 
 
 ## Week 20
 
-Continuing with the dataset from Week 20, a survey of 109041 Indian households' characteristics, this week I compare households that have a male head and female head, and build an algorithm to predict who's in charge.
+Continuing with the dataset from Week 19, a survey of 109041 Indian households' characteristics, this week I compare households that have a male head and female head, and build an algorithm to predict who's in charge.
 
 See folder for R Markdown report with all code, or read the report at:
 
