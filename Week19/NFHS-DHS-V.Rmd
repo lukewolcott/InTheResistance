@@ -178,7 +178,7 @@ Now let's return to the full dataset of 109,041 households, and use the same 44 
 
 The supplemental file `NFHS3SUP.pdf`, p.6, explains how the "Wealth Index" variable HV270 was constructed using PCA to generate weight for these variables.  The index is a cumulative score, normalized to a ranking from 1 (poorest) to 5 (wealthiest).  How do the five clusters compare with the Wealth Index?
 
-```{r}
+```{r, cache=TRUE}
 # all_cases_cleaned.csv is the full IAHR52FL.SAV cleaned by clean.R
 df_full <- read.csv("all_cases_cleaned.csv", header=TRUE)
 
